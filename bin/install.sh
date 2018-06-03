@@ -84,8 +84,8 @@ setup_sources() {
 	deb http://security.debian.org/ buster/updates main contrib non-free
 	deb-src http://security.debian.org/ buster/updates main contrib non-free
 
-	#deb http://httpredir.debian.org/debian/ jessie-backports main contrib non-free
-	#deb-src http://httpredir.debian.org/debian/ jessie-backports main contrib non-free
+	#deb http://httpredir.debian.org/debian/ stretch-backports main contrib non-free
+	#deb-src http://httpredir.debian.org/debian/ stretch-backports main contrib non-free
 
 	deb http://httpredir.debian.org/debian experimental main contrib non-free
 	deb-src http://httpredir.debian.org/debian experimental main contrib non-free
@@ -535,7 +535,7 @@ get_dotfiles() {
 	cd "$HOME"
 
 	# install dotfiles from repo
-	git clone git@github.com:jessfraz/dotfiles.git "${HOME}/dotfiles"
+	git clone git@github.com:jeffl8n/dotfiles.git "${HOME}/dotfiles"
 	cd "${HOME}/dotfiles"
 
 	# installs all the things
@@ -605,15 +605,15 @@ install_virtualbox() {
 	echo "Checking for libvpx1: $PKG_OK"
 	if [ "" == "$PKG_OK" ]; then
 		echo "No libvpx1. Installing libvpx1."
-		jessie_sources=/etc/apt/sources.list.d/jessie.list
-		echo "deb http://httpredir.debian.org/debian jessie main contrib non-free" > "$jessie_sources"
+		stretch_sources=/etc/apt/sources.list.d/stretch.list
+		echo "deb http://httpredir.debian.org/debian stretch main contrib non-free" > "$stretch_sources"
 
 		apt update
-		apt install -y -t jessie libvpx1 \
+		apt install -y -t stretch libvpx1 \
 			--no-install-recommends
 
-		# cleanup the file that we used to install things from jessie
-		rm "$jessie_sources"
+		# cleanup the file that we used to install things from stretch
+		rm "$stretch_sources"
 	fi
 
 	echo "deb http://download.virtualbox.org/virtualbox/debian vivid contrib" >> /etc/apt/sources.list.d/virtualbox.list
