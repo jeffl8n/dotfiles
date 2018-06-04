@@ -1,7 +1,7 @@
 #!/bin/bash
 # Bash wrappers for docker run commands
 
-export DOCKER_REPO_PREFIX=jess
+export DOCKER_REPO_PREFIX=jeff
 
 #
 # Helper Functions
@@ -510,7 +510,7 @@ nginx(){
 		nginx
 
 	# add domain to hosts & open nginx
-	sudo hostess add jess 127.0.0.1
+	sudo hostess add jeff 127.0.0.1
 }
 nmap(){
 	docker run --rm -it \
@@ -737,7 +737,7 @@ scudcloud(){
 		-v /etc/group:/etc/group:ro \
 		-u "$(whoami)" -w "$HOME" \
 		-v "${HOME}/.Xauthority:$HOME/.Xauthority" \
-		-v "${HOME}/.scudcloud:/home/jessie/.config/scudcloud" \
+		-v "${HOME}/.scudcloud:/home/jeff/.config/scudcloud" \
 		--device /dev/snd \
 		--name scudcloud \
 		${DOCKER_REPO_PREFIX}/scudcloud

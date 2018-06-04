@@ -16,10 +16,10 @@ set -o pipefail
 
 SUBKEY_LENGTH=${SUBKEY_LENGTH:=2048}
 SUBKEY_EXPIRE=${SUBKEY_EXPIRE:=0}
-SURNAME=${SURNAME:="Frazelle"}
-GIVENNAME=${GIVENNAME:="Jessie"}
+SURNAME=${SURNAME:="Layton"}
+GIVENNAME=${GIVENNAME:="Jeff"}
 EMAIL=${EMAIL:=$GMAIL}
-PUBLIC_KEY_URL=${PUBLIC_KEY_URL:="https://keybase.io/jessie/key.asc"}
+PUBLIC_KEY_URL=${PUBLIC_KEY_URL:="https://keybase.io/jeffl8n/key.asc"}
 KEYID=${KEYID:=$GPGKEY}
 SEX=${SEX:=F}
 

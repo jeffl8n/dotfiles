@@ -478,7 +478,7 @@ dell_monitor() {
 
 govendorcheck() {
     # shellcheck disable=SC2046
-    vendorcheck -u ./... | awk '{print $NF}' | sed -e "s#^github.com/jessfraz/$(basename $(pwd))/##"
+    vendorcheck -u ./... | awk '{print $NF}' | sed -e "s#^github.com/jeffl8n/$(basename $(pwd))/##"
 }
 
 restart_gpgagent(){

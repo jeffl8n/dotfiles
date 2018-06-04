@@ -23,7 +23,7 @@ URI=https://api.github.com
 API_VERSION=v3
 API_HEADER="Accept: application/vnd.github.${API_VERSION}+json"
 AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
-GITHUB_USER=${GITHUB_USER:-jessfraz}
+GITHUB_USER=${GITHUB_USER:-jeffl8n}
 
 esc=$(printf '\033')
 red=${esc}'[0;31m'

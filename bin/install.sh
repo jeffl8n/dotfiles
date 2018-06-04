@@ -100,11 +100,10 @@ setup_sources() {
 	EOF
 
 	# add docker apt repo
-	cat <<-EOF > /etc/apt/sources.list.d/docker.list
-	deb https://apt.dockerproject.org/repo debian-buster main
-	deb https://apt.dockerproject.org/repo debian-buster testing
-	deb https://apt.dockerproject.org/repo debian-buster experimental
-	EOF
+	echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -c -s) stable" > /etc/apt/sources.list.d/docker.list
+
+	# Import the Docker public key
+	curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 
 	# Create an environment variable for the correct distribution
 	CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
@@ -121,9 +120,6 @@ setup_sources() {
 
 	# Import the Google Chrome public key
 	curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-
-	# add docker gpg key
-	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
 	# add the yubico ppa gpg key
 	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 3653E21064B19D134466702E43D5C49532CBA1A9
@@ -212,7 +208,6 @@ base() {
 		libseccomp-dev \
 		network-manager \
 		openvpn \
-		s3cmd \
 		--no-install-recommends
 
 	# install tlp with recommends
@@ -288,8 +283,8 @@ install_docker() {
 	)
 	chmod +x /usr/local/bin/docker*
 
-	curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/systemd/system/docker.service > /etc/systemd/system/docker.service
-	curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/systemd/system/docker.socket > /etc/systemd/system/docker.socket
+	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/systemd/system/docker.service > /etc/systemd/system/docker.service
+	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/systemd/system/docker.socket > /etc/systemd/system/docker.socket
 
 	systemctl daemon-reload
 	systemctl enable docker
@@ -351,11 +346,11 @@ install_golang() {
 	go get github.com/genuinetools/udict
 	go get github.com/genuinetools/weather
 
-	go get github.com/jessfraz/cliaoke
-	go get github.com/jessfraz/junk/sembump
-	go get github.com/jessfraz/pastebinit
-	go get github.com/jessfraz/secping
-	go get github.com/jessfraz/tdash
+	# go get github.com/jeffl8n/cliaoke
+	# go get github.com/jeffl8n/junk/sembump
+	# go get github.com/jeffl8n/pastebinit
+	# go get github.com/jeffl8n/secping
+	# go get github.com/jeffl8n/tdash
 
 	go get github.com/axw/gocov/gocov
 	go get github.com/crosbymichael/gistit
@@ -392,11 +387,11 @@ install_golang() {
 		fi
 
 		# make sure we create the right git remotes
-		if [[ "$owner" != "jessfraz" ]]; then
+		if [[ "$owner" != "jeffl8n" ]]; then
 			(
 			cd "${GOPATH}/src/github.com/${project}"
 			git remote set-url --push origin no_push
-			git remote add jessfraz "https://github.com/jessfraz/${repo}.git"
+			git remote add jeffl8n "https://github.com/jeffl8n/${repo}.git"
 			)
 		fi
 	done
@@ -408,7 +403,7 @@ install_golang() {
 		git clone "https://github.com/kubernetes/${krepo}.git" "${GOPATH}/src/k8s.io/${krepo}"
 		cd "${GOPATH}/src/k8s.io/${krepo}"
 		git remote set-url --push origin no_push
-		git remote add jessfraz "https://github.com/jessfraz/${krepo}.git"
+		git remote add jeffl8n "https://github.com/jeffl8n/${krepo}.git"
 	done
 	)
 }
@@ -478,7 +473,7 @@ install_syncthing() {
 
 	syncthing -upgrade
 
-	curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/systemd/system/syncthing@.service > /etc/systemd/system/syncthing@.service
+	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/systemd/system/syncthing@.service > /etc/systemd/system/syncthing@.service
 
 	systemctl daemon-reload
 	systemctl enable "syncthing@${TARGET_USER}"
@@ -510,16 +505,16 @@ install_wmapps() {
 
 	# update clickpad settings
 	mkdir -p /etc/X11/xorg.conf.d/
-	curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/X11/xorg.conf.d/50-synaptics-clickpad.conf > /etc/X11/xorg.conf.d/50-synaptics-clickpad.conf
+	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/X11/xorg.conf.d/50-synaptics-clickpad.conf > /etc/X11/xorg.conf.d/50-synaptics-clickpad.conf
 
 	# add xorg conf
-	curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/X11/xorg.conf > /etc/X11/xorg.conf
+	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/X11/xorg.conf > /etc/X11/xorg.conf
 
 	# get correct sound cards on boot
-	curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/modprobe.d/intel.conf > /etc/modprobe.d/intel.conf
+	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/modprobe.d/intel.conf > /etc/modprobe.d/intel.conf
 
 	# pretty fonts
-	curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/fonts/local.conf > /etc/fonts/local.conf
+	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/fonts/local.conf > /etc/fonts/local.conf
 
 	echo "Fonts file setup successfully now run:"
 	echo "	dpkg-reconfigure fontconfig-config"
@@ -562,7 +557,7 @@ install_vim() {
 
 	# install .vim files
 	sudo rm -rf "${HOME}/.vim" 
-	git clone --recursive git@github.com:jessfraz/.vim.git "${HOME}/.vim"
+	git clone --recursive git@github.com:jeffl8n/.vim.git "${HOME}/.vim"
 	ln -snf "${HOME}/.vim/vimrc" "${HOME}/.vimrc"
 	sudo ln -snf "${HOME}/.vim" /root/.vim
 	sudo ln -snf "${HOME}/.vimrc" /root/.vimrc
