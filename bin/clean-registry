@@ -15,7 +15,7 @@
 set -e
 set -o pipefail
 
-REPO_URL="${REPO_URL:-r.j3ss.co}"
+REPO_URL="${REPO_URL:-r.jeffl8n.com}"
 BUCKET_PREFIX="gs://${REPO_URL}/docker/registry/v2"
 JOBS=${JOBS:-10}
 

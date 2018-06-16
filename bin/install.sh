@@ -460,7 +460,7 @@ install_scripts() {
 	local scripts=( have light )
 
 	for script in "${scripts[@]}"; do
-		curl -sSL "https://misc.j3ss.co/binaries/$script" > "/usr/local/bin/${script}"
+		curl -sSL "https://misc.jeffl8n.com/binaries/$script" > "/usr/local/bin/${script}"
 		chmod +x "/usr/local/bin/${script}"
 	done
 }
@@ -469,7 +469,7 @@ install_scripts() {
 install_syncthing() {
 	# download syncthing binary
 	if [[ ! -f /usr/local/bin/syncthing ]]; then
-		curl -sSL https://misc.j3ss.co/binaries/syncthing > /usr/local/bin/syncthing
+		curl -sSL https://misc.jeffl8n.com/binaries/syncthing > /usr/local/bin/syncthing
 		chmod +x /usr/local/bin/syncthing
 	fi
 

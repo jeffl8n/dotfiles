@@ -80,7 +80,7 @@ travis(){
 		-v "$(pwd):/usr/src/repo:ro" \
 		--workdir /usr/src/repo \
 		--log-driver none \
-		r.j3ss.co/travis "$@"
+		r.jeffl8n.com/travis "$@"
 }
 
 
