@@ -257,7 +257,9 @@ setup_sudo() {
 # and adds necessary items to boot params
 install_docker() {
 	# create docker group
-	sudo groupadd docker
+	if [[ ! $(getent group docker) ]]; then
+		sudo groupadd docker
+	fi
 	sudo gpasswd -a "$TARGET_USER" docker
 
 	# Include contributed completions
@@ -556,7 +558,7 @@ install_vim() {
 	cd "$HOME"
 
 	# install .vim files
-	sudo rm -rf "${HOME}/.vim" 
+	sudo rm -rf "${HOME}/.vim"
 	git clone --recursive git@github.com:jeffl8n/.vim.git "${HOME}/.vim"
 	ln -snf "${HOME}/.vim/vimrc" "${HOME}/.vimrc"
 	sudo ln -snf "${HOME}/.vim" /root/.vim
@@ -596,7 +598,7 @@ install_vim() {
 
 install_virtualbox() {
 	# check if we need to install libvpx1
-	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' libvpx1 | grep "install ok installed")
+	PKG_OK=$(dpkg-query -l | grep "libvpx1")
 	echo "Checking for libvpx1: $PKG_OK"
 	if [ "" == "$PKG_OK" ]; then
 		echo "No libvpx1. Installing libvpx1."
@@ -628,9 +630,8 @@ install_vagrant() {
 	if [[ ! -z "$1" ]]; then
 		export VAGRANT_VERSION=$1
 	fi
-
 	# check if we need to install virtualbox
-	PKG_OK=$(dpkg-query -W --showformat='${Status}\n' virtualbox | grep "install ok installed")
+	PKG_OK=$(dpkg-query -l | grep "virtualbox")
 	echo "Checking for virtualbox: $PKG_OK"
 	if [ "" == "$PKG_OK" ]; then
 		echo "No virtualbox. Installing virtualbox."
