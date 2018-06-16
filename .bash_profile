@@ -40,3 +40,5 @@ if hash kubectl 2>/dev/null; then
 	# shellcheck source=/dev/null
 	source <(kubectl completion bash)
 fi
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*

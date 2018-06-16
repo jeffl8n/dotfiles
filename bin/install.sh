@@ -550,6 +550,8 @@ get_dotfiles() {
 	)
 
 	install_vim;
+
+	install_rvm;
 }
 
 install_vim() {
@@ -651,6 +653,9 @@ install_vagrant() {
 	vagrant plugin install vagrant-vbguest
 }
 
+install_rvm() {
+	curl -sSL https://get.rvm.io | bash -s stable --ruby
+}
 
 usage() {
 	echo -e "install.sh\\n\\tThis script installs my basic setup for a debian laptop\\n"
