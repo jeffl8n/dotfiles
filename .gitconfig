@@ -3,6 +3,12 @@
     # Amend the currently staged files to the latest commit
     amend = commit --amend --reuse-message=HEAD
 
+    # Clean unused branches
+    bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs git branch -d; }; f"
+
+    # Change to master branch and cleanup unused branches
+    bdone = "!f() { git checkout ${1-master} && git up && git bclean ${1-master}; }; f"
+
     # Clone a repository including all submodules
     c = clone --recursive
 
@@ -174,13 +180,17 @@
     # change to maching for machines with older versions of git 1.x.x
     default = simple
 
+[url "git@github.com:github"]
+
+	insteadOf = "https://github.com/github"
+	insteadOf = "github:github"
+	insteadOf = "git://github.com/github"
+
 [url "git@github.com:"]
 
-    insteadOf = "gh:"
-    insteadOf = "git://github.com"
-    pushInsteadOf = https://github.com/
-    pushInsteadOf = "github:"
-    pushInsteadOf = "git://github.com/"
+	pushInsteadOf = "https://github.com/"
+	pushInsteadOf = "github:"
+	pushInsteadOf = "git://github.com/"
 
 [url "git://github.com/"]
 

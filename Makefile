@@ -29,16 +29,22 @@ dotfiles: ## Installs the dotfiles.
 	if [ -f /usr/local/bin/pinentry ]; then \
 		sudo ln -snf /usr/bin/pinentry /usr/local/bin/pinentry; \
 	fi;
+	mkdir -p $(HOME)/Pictures;
+	ln -snf $(CURDIR)/central-park.jpg $(HOME)/Pictures/central-park.jpg;
 
 .PHONY: etc
 etc: ## Installs the etc directory files.
 	sudo mkdir -p /etc/docker/seccomp
 	for file in $(shell find $(CURDIR)/etc -type f -not -name ".*.swp"); do \
 		f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
-		sudo ln -sf $$file $$f; \
+		sudo mkdir -p $$(dirname $$f); \
+		sudo ln -f $$file $$f; \
 	done
 	systemctl --user daemon-reload || true
 	sudo systemctl daemon-reload
+	sudo systemctl enable systemd-networkd systemd-resolved
+	sudo systemctl start systemd-networkd systemd-resolved
+	sudo ln -snf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
 .PHONY: test
 test: shellcheck ## Runs all the tests on the files in the repository.
