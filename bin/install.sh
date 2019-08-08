@@ -268,7 +268,7 @@ setup_sudo() {
 	gpasswd -a "$TARGET_USER" systemd-network
 
 	# create docker group
-	sudo groupadd docker
+	sudo groupadd -f docker
 	sudo gpasswd -a "$TARGET_USER" docker
 
 	# add go path to secure path
