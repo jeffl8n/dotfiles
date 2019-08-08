@@ -19,7 +19,7 @@ get_user() {
 		fi
 
 		# iterate through the user options and print them
-		PS3='command -v user account should be used? '
+		PS3='which user account should be used? '
 
 		select opt in "${options[@]}"; do
 			readonly TARGET_USER=$opt
@@ -454,14 +454,6 @@ install_scripts() {
 	# install lolcat
 	curl -sSL https://raw.githubusercontent.com/tehmaze/lolcat/master/lolcat > /usr/local/bin/lolcat
 	chmod +x /usr/local/bin/lolcat
-
-
-	local scripts=( have light )
-
-	for script in "${scripts[@]}"; do
-		curl -sSL "https://misc.jeffl8n.com/binaries/$script" > "/usr/local/bin/${script}"
-		chmod +x "/usr/local/bin/${script}"
-	done
 }
 
 # install stuff for i3 window manager
