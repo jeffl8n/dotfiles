@@ -271,19 +271,26 @@ setup_sudo() {
 	sudo groupadd -f docker
 	sudo gpasswd -a "$TARGET_USER" docker
 
-	# add go path to secure path
-	{ \
-		echo -e "Defaults	secure_path=\"/usr/local/go/bin:/home/${TARGET_USER}/.go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/share/bcc/tools:/home/${TARGET_USER}/.cargo/bin\""; \
-		echo -e 'Defaults	env_keep += "ftp_proxy http_proxy https_proxy no_proxy GOPATH EDITOR"'; \
-		echo -e "${TARGET_USER} ALL=(ALL) NOPASSWD:ALL"; \
-		echo -e "${TARGET_USER} ALL=NOPASSWD: /sbin/ifconfig, /sbin/ifup, /sbin/ifdown, /sbin/ifquery"; \
-	} >> /etc/sudoers
+	# add go path to secure path if it doesn't already exist
+	LINE="Defaults	secure_path=\"/usr/local/go/bin:/home/${TARGET_USER}/.go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/share/bcc/tools:/home/${TARGET_USER}/.cargo/bin\""
+	FILE="/etc/sudoers"
+	grep -qPx -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
+	LINE="Defaults	env_keep += \"ftp_proxy http_proxy https_proxy no_proxy GOPATH EDITOR\""
+	grep -qx -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
+	LINE="${TARGET_USER} ALL=(ALL) NOPASSWD:ALL"
+	grep -qx -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
+	LINE="${TARGET_USER} ALL=NOPASSWD: /sbin/ifconfig, /sbin/ifup, /sbin/ifdown, /sbin/ifquery"
+	grep -qPx -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
 
 	# setup downloads folder as tmpfs
 	# that way things are removed on reboot
 	# i like things clean but you may not want this
 	mkdir -p "/home/$TARGET_USER/Downloads"
-	echo -e "\\n# tmpfs for downloads\\ntmpfs\\t/home/${TARGET_USER}/Downloads\\ttmpfs\\tnodev,nosuid,size=2G\\t0\\t0" >> /etc/fstab
+	LINE='# tmpfs for downloads'
+	FILE="/etc/fstab"
+	grep -qPx -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
+	LINE="tmpfs\\t/home/${TARGET_USER}/Downloads\\ttmpfs\\tnodev,nosuid,size=2G\\t0\\t0"
+	grep -qPx -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
 }
 
 # install rust
