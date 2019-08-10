@@ -418,7 +418,7 @@ install_graphics() {
 	local system=$1
 
 	if [[ -z "$system" ]]; then
-		echo "You need to specify whether it's intel, geforce or optimus"
+		echo "You need to specify whether it's intel, ati, amd, geforce, or optimus"
 		exit 1
 	fi
 
@@ -434,8 +434,14 @@ install_graphics() {
 		"optimus")
 			pkgs+=( nvidia-kernel-dkms bumblebee-nvidia primus )
 			;;
+		"ati")
+			pkgs+=( xserver-xorg-video-ati )
+			;;
+		"amd")
+			pkgs+=( xserver-xorg-video-amdgpu )
+			;;
 		*)
-			echo "You need to specify whether it's intel, geforce or optimus"
+			echo "You need to specify whether it's intel, ati, amd, geforce, or optimus"
 			exit 1
 			;;
 	esac
