@@ -188,6 +188,11 @@ update_firmware() {
 	echo "Updating iwlwifi..."
 	echo
 	update-iwlwifi
+
+	echo
+	echo "Updating Qualcomm Wifi..."
+	echo
+	update-ath10k
 }
 
 update() {

@@ -1,0 +1,41 @@
+#!/bin/bash
+##############################################################################
+# update-ath10k
+# -----------
+# Update ath10k from Qualcomm's linux firmware fork which has the
+# latest builds for wifi card Qualcomm Atheros QCA6174
+#
+# :authors: Jeff Layton, @jeffl8n
+# :date: 11 August, 2019
+# :version: 0.0.1
+##############################################################################
+set -e
+set -o pipefail
+
+update_ath10k(){
+	if [ "$EUID" -ne 0 ]; then
+		echo "Please run as root."
+		return 1
+	fi
+
+	(
+	# make a temp dir for the clone
+	local tdir
+	tdir=$(mktemp -d)
+
+	cd "$tdir"
+
+	# clone the repo
+	git clone --depth 1 https://github.com/kvalo/ath10k-firmware.git
+
+	# copy the firmware
+	cd ath10k-firmware
+	mkdir -p /lib/firmware
+	cp -r * /lib/firmware/ath10k/
+
+	# cleanup
+	rm -rf "$tdir"
+	)
+}
+
+update_ath10k "$@"
