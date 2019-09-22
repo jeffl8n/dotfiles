@@ -218,7 +218,7 @@ bar {
 # set background
 # use the same background as slim (login manager)
 # this file is an alias to something in /home/jeff/Pictures
-exec --no-startup-id feh --bg-fill ${HOME}/Pictures/central-park.jpg
+# exec --no-startup-id feh --bg-fill ${HOME}/Pictures/central-park.jpg
 
 # Sway backgroud
 # output "*" background ${HOME}/Pictures/central-park2.jpg fill
