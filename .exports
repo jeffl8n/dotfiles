@@ -39,4 +39,5 @@ if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
 	export GPG_TTY
 fi
 
-export SPLUNK_HOME=/opt/splunk
+# set xdg data dirs for dmenu to source
+export XDG_DATA_DIRS=/usr/share/
