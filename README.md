@@ -18,6 +18,8 @@
 
 ## About
 
+Thanks to @jessfraz for these dotfiles!
+
 ### Installing
 
 ```console
@@ -44,6 +46,8 @@ GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 git config --global user.email "$GIT_AUTHOR_EMAIL"
 GH_USER="nickname"
 git config --global github.user "$GH_USER"
+GIT_SIGNING_KEY="1234567890ABCDEF"
+git config --global user.signingkey "$GIT_SIGNING_KEY"
 
 ###
 ### Gmail credentials for mutt
@@ -57,8 +61,8 @@ export GMAIL_FROM=from-email@you.com
 
 ### `.vim`
 
-For my `.vimrc` and `.vim` dotfiles see
-[github.com/jeffl8n/.vim](https://github.com/jeffl8n/.vim).
+For `.vimrc` and `.vim` dotfiles see
+[github.com/jessfraz/.vim](https://github.com/jessfraz/.vim).
 
 ## Contributing
 

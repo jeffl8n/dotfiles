@@ -165,4 +165,5 @@ for file in ~/.{bash_prompt,aliases,functions,path,dockerfunc,extra,exports}; do
 done
 unset file
 
+# shellcheck source=/dev/null
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
