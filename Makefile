@@ -76,7 +76,7 @@ shellcheck: ## Runs the shellcheck tests on the scripts.
 		--name df-shellcheck \
 		-v $(CURDIR):/usr/src:ro \
 		--workdir /usr/src \
-		r.jeffl8n.com/shellcheck ./test.sh
+		r.j3ss.co/shellcheck ./test.sh
 
 .PHONY: help
 help:

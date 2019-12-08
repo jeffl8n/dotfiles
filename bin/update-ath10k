@@ -31,7 +31,7 @@ update_ath10k(){
 	# copy the firmware
 	cd ath10k-firmware
 	mkdir -p /lib/firmware
-	cp -r * /lib/firmware/ath10k/
+	cp -r ./* /lib/firmware/ath10k/
 
 	# cleanup
 	rm -rf "$tdir"

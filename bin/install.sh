@@ -289,7 +289,7 @@ setup_sudo() {
 	LINE='# tmpfs for downloads'
 	FILE="/etc/fstab"
 	grep -qPx -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
-	LINE="tmpfs\\t/home/${TARGET_USER}/Downloads\\ttmpfs\\tnodev,nosuid,size=2G\\t0\\t0"
+	LINE="tmpfs\\t/home/${TARGET_USER}/Downloads\\ttmpfs\\tnodev,nosuid,size=5G\\t0\\t0"
 	grep -qPx -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
 }
 
@@ -547,7 +547,7 @@ install_vim() {
 
 	# install .vim files
 	sudo rm -rf "${HOME}/.vim"
-	git clone --recursive git@github.com:jeffl8n/.vim.git "${HOME}/.vim"
+	git clone --recursive git@github.com:jessfraz/.vim.git "${HOME}/.vim"
 	(
 	cd "${HOME}/.vim"
 	make install

@@ -7,7 +7,13 @@ export GOPATH="${HOME}/.go"
 export PATH=/usr/local/bin:${PATH}:/sbin
 
 # add go path
-export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+export PATH="${HOME}/.npm/bin:${PATH}"
+
+### add npm path
+export PATH="/usr/local/heroku/bin:$PATH"
+
+# add pip/python path
+export PATH="${HOME}/.local/bin:${PATH}"
 
 # add rust path
 export PATH="${HOME}/.cargo/bin:${PATH}"
