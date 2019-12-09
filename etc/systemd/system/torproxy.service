@@ -6,12 +6,12 @@ After=network.target docker.socket
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStartPre=-/usr/bin/docker rm -f torproxy
-ExecStart=/usr/bin/docker run -d --restart always \
+ExecStartPre=-/usr/local/bin/docker rm -f torproxy
+ExecStart=/usr/local/bin/docker run -d --restart always \
 		  -v /etc/localtime:/etc/localtime:ro \
 		  -p 9050:9050 \
 		  --name torproxy \
-		  jeff/tor-proxy
+		  jess/tor-proxy
 ExecStartPost=-/bin/bash -c "hostess add torproxy $(docker inspect --format \"{{.NetworkSettings.Networks.bridge.IPAddress}}\" torproxy)"
 
 [Install]

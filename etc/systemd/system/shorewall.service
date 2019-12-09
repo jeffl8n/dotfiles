@@ -6,13 +6,13 @@ After=network.target docker.socket
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStartPre=-/usr/bin/docker rm -f shorewall
-ExecStart=/usr/bin/docker run --rm \
+ExecStartPre=-/usr/local/bin/docker rm -f shorewall
+ExecStart=/usr/local/bin/docker run --rm \
 		  --net host \
 		  --cap-add NET_ADMIN \
 		  --privileged \
 		  --name shorewall \
-		  jeff/shorewall start
+		  jess/shorewall start
 
 [Install]
 WantedBy=multi-user.target

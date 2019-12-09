@@ -7,13 +7,13 @@ Requires=torproxy.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStartPre=-/usr/bin/docker rm -f privoxy
-ExecStart=/usr/bin/docker run -d --restart always \
+ExecStartPre=-/usr/local/bin/docker rm -f privoxy
+ExecStart=/usr/local/bin/docker run -d --restart always \
 		  -v /etc/localtime:/etc/localtime:ro \
 		  --link torproxy:torproxy \
 		  -p 8118:8118 \
 		  --name privoxy \
-		  jeff/privoxy
+		  jess/privoxy
 ExecStartPost=-/bin/bash -c "hostess add privoxy $(docker inspect --format \"{{.NetworkSettings.Networks.bridge.IPAddress}}\" privoxy)"
 
 [Install]

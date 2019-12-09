@@ -6,8 +6,8 @@ After=network.target docker.socket
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStartPre=-/usr/bin/docker rm -f nginx
-ExecStart=/usr/bin/docker run -d --restart always \
+ExecStartPre=-/usr/local/bin/docker rm -f nginx
+ExecStart=/usr/local/bin/docker run -d --restart always \
 		  -v /home/%i/.nginx:/etc/nginx \
 		  --net host \
 		  --name nginx \
