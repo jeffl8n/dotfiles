@@ -161,12 +161,14 @@ base_min() {
 		make \
 		mount \
 		net-tools \
+		ngrep \
 		policykit-1 \
 		silversearcher-ag \
 		ssh \
 		strace \
 		sudo \
 		tar \
+		tcpdump \
 		tree \
 		tzdata \
 		unzip \
