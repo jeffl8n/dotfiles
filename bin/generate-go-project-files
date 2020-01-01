@@ -15,9 +15,9 @@
 set -e
 set -o pipefail
 
-OWNER=${OWNER:-The Genuinetools Authors}
+OWNER=${OWNER:-Jeff Layton}
 
-BASE_PROJECT=${BASE_PROJECT:-genuinetools/pepper}
+BASE_PROJECT=${BASE_PROJECT}
 BASE_PROJECT_NAME="$(basename "$BASE_PROJECT")"
 BASE_PROJECT_DIR="$(dirname "$BASE_PROJECT")"
 
@@ -32,7 +32,7 @@ fi
 # Generate a file passed as an argument.
 generate_file(){
 	if [[ "$PROJECT" == "$BASE_PROJECT" ]]; then
-		# Skip getting the files in we are on the base project.
+		# Skip getting the files if we are on the base project.
 		return
 	fi
 
