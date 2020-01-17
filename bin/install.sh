@@ -9,7 +9,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Choose a user account to use for this installation
 get_user() {
-	if [ -z "${TARGET_USER-}" ]; then
+	if [[ -z "${TARGET_USER-}" ]]; then
 		mapfile -t options < <(find /home/* -maxdepth 0 -printf "%f\\n" -type d)
 		# if there is only one option just use that user
 		if [ "${#options[@]}" -eq "1" ]; then
@@ -25,8 +25,8 @@ get_user() {
 			readonly TARGET_USER=$opt
 			break
 		done
-		fi
-	}
+	fi
+}
 
 check_is_sudo() {
 	if [ "$EUID" -ne 0 ]; then
@@ -420,7 +420,7 @@ install_graphics() {
 	local system=$1
 
 	if [[ -z "$system" ]]; then
-		echo "You need to specify whether it's intel, ati, amd, geforce, or optimus"
+		echo "You need to specify whether it's intel, amd, geforce, or optimus"
 		exit 1
 	fi
 
@@ -436,14 +436,11 @@ install_graphics() {
 		"optimus")
 			pkgs+=( nvidia-kernel-dkms bumblebee-nvidia primus )
 			;;
-		"ati")
-			pkgs+=( xserver-xorg-video-ati )
-			;;
 		"amd")
-			pkgs+=( xserver-xorg-video-amdgpu )
+			pkgs+=( mesa xserver-xorg-video-amdgpu firmware-linux-nonfree libgl1-mesa-dri )
 			;;
 		*)
-			echo "You need to specify whether it's intel, ati, amd, geforce, or optimus"
+			echo "You need to specify whether it's intel, amd, geforce, or optimus"
 			exit 1
 			;;
 	esac
@@ -483,11 +480,15 @@ install_scripts() {
 install_wmapps() {
 	apt update || true
 	apt install -y \
-		alsa-utils \
+		bluez \
+		bluez-firmware \
 		feh \
 		i3 \
 		i3lock \
 		i3status \
+		pulseaudio \
+		pulseaudio-module-bluetooth \
+		pulsemixer \
 		scrot \
 		suckless-tools \
 		rxvt-unicode-256color \
@@ -495,6 +496,12 @@ install_wmapps() {
 		xclip \
 		xcompmgr \
 		--no-install-recommends
+
+	# start and enable pulseaudio
+	systemctl --user daemon-reload
+	systemctl --user enable pulseaudio.service
+	systemctl --user enable pulseaudio.socket
+	systemctl --user start pulseaudio.service
 
 	# update clickpad settings
 	mkdir -p /etc/X11/xorg.conf.d/
@@ -539,7 +546,6 @@ get_dotfiles() {
 	# systemctl --user enable dbus.socket
 
 	sudo systemctl enable "i3lock@${TARGET_USER}"
-	sudo systemctl enable suspend-sedation.service
 
 	cd "$HOME"
 	mkdir -p ~/Pictures/Screenshots
@@ -590,17 +596,17 @@ install_tools() {
 usage() {
 	echo -e "install.sh\\n\\tThis script installs my basic setup for a debian laptop\\n"
 	echo "Usage:"
-	echo "  base                                - setup sources & install base pkgs"
-	echo "  basemin                             - setup sources & install base min pkgs"
-	echo "  graphics {intel, geforce, optimus}  - install graphics drivers"
-	echo "  wm                                  - install window manager/desktop pkgs"
-	echo "  dotfiles                            - get dotfiles"
-	echo "  vim                                 - install vim specific dotfiles"
-	echo "  golang                              - install golang and packages"
-	echo "  rust                                - install rust"
-	echo "  scripts                             - install scripts"
-	echo "  tools                               - install golang, rust, and scripts"
-	echo "  dropbear                            - install and configure dropbear initramfs"
+	echo "  base                                	- setup sources & install base pkgs"
+	echo "  basemin                             	- setup sources & install base min pkgs"
+	echo "  graphics {intel, amd, geforce, optimus}  - install graphics drivers"
+	echo "  wm                                  	- install window manager/desktop pkgs"
+	echo "  dotfiles                            	- get dotfiles"
+	echo "  vim                                 	- install vim specific dotfiles"
+	echo "  golang                              	- install golang and packages"
+	echo "  rust                                	- install rust"
+	echo "  scripts                             	- install scripts"
+	echo "  tools                               	- install golang, rust, and scripts"
+	echo "  dropbear                            	- install and configure dropbear initramfs"
 }
 
 main() {

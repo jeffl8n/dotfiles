@@ -4,15 +4,15 @@
 
 set $mod Mod4
 set $term urxvt
-set $menu i3-dmenu-desktop
+set $menu i3-dmenu-desktop --dmenu="dmenu -i -fn 'Consolas:pixelsize=20'"
 set $barcmd i3status
-set $lockcmd i3lock
+set $lockcmd i3lock -c 000000
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:Monospace 16
+font pango:Monospace 12
 
 # HiDPI for sway
 # output eDP-1 scale 1
@@ -155,9 +155,9 @@ bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
 # audio controls
-bindsym XF86AudioRaiseVolume exec amixer set Master 5%+ #increase sound volume
-bindsym XF86AudioLowerVolume exec amixer set Master 5%- #decrease sound volume
-bindsym XF86AudioMute exec amixer set Master 1+ toggle # mute sound
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -5% #decrease sound volume
+bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle # mute sound
 bindsym XF86AudioMicMute exec amixer set Capture toggle # mute mic
 
 # screen brightness controls
@@ -213,7 +213,15 @@ bindsym $mod+r mode "resize"
 
 # i3status bar config
 bar {
-	font pango:monospace 16
+        mode dock
+        position bottom
+
+        tray_output primary
+        tray_padding 0
+
+        font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+        font pango:DejaVu Sans Mono 12
+
 	status_command $barcmd --config ~/.i3/status.conf
 }
 
@@ -221,10 +229,8 @@ bar {
 # set background
 # use the same background as slim (login manager)
 # this file is an alias to something in /home/jeff/Pictures
-# exec --no-startup-id feh --bg-fill ${HOME}/Pictures/central-park.jpg
+# exec --no-startup-id feh --bg-fill ${HOME}/Pictures/background.jpg
 
-# Sway backgroud
-# output "*" background ${HOME}/Pictures/central-park2.jpg fill
 
 # run the merge for good colors
 exec xrdb -merge $HOME/.Xresources
