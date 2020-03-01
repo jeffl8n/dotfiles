@@ -489,9 +489,9 @@ install_wmapps() {
 		pulseaudio \
 		pulseaudio-module-bluetooth \
 		pulsemixer \
-		scrot \
-		suckless-tools \
+		rofi \
 		rxvt-unicode-256color \
+		scrot \
 		usbmuxd \
 		xclip \
 		xcompmgr \
