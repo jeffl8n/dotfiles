@@ -101,6 +101,10 @@ setup_sources() {
 	deb http://repo.linrunner.de/debian sid main
 	EOF
 
+	# tailscale
+	curl https://pkgs.tailscale.com/stable/debian/buster.gpg | sudo apt-key add -
+	curl https://pkgs.tailscale.com/stable/debian/buster.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+
 	# Create an environment variable for the correct distribution
 	CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
 	export CLOUD_SDK_REPO
@@ -177,9 +181,9 @@ base_min() {
 		zip \
 		--no-install-recommends
 
-	apt autoremove
-	apt autoclean
-	apt clean
+	apt autoremove -y
+	apt autoclean -y
+	apt clean -y
 
 	install_scripts
 }
@@ -205,17 +209,20 @@ base() {
 		libimobiledevice6 \
 		libltdl-dev \
 		libpam-systemd \
+		libpcsclite-dev \
 		libseccomp-dev \
+		pcscd \
 		pinentry-curses \
 		scdaemon \
 		systemd \
+		tailscale \
 		--no-install-recommends
 
 	setup_sudo
 
-	apt autoremove
-	apt autoclean
-	apt clean
+	apt autoremove -y
+	apt autoclean -y
+	apt clean -y
 }
 
 # install and configure dropbear
@@ -227,9 +234,9 @@ install_dropbear() {
 		dropbear-initramfs \
 		--no-install-recommends
 
-	apt autoremove
-	apt autoclean
-	apt clean
+	apt autoremove -y
+	apt autoclean -y
+	apt clean -y
 
 	# change the default port and settings
 	echo 'DROPBEAR_OPTIONS="-p 4748 -s -j -k -I 60"' >> /etc/dropbear-initramfs/config
@@ -296,8 +303,18 @@ setup_sudo() {
 }
 
 # install rust
+
 install_rust() {
 	curl https://sh.rustup.rs -sSf | sh
+
+	# Install rust-src for rust analyzer
+	rustup component add rust-src
+	# Install rust-analyzer
+	curl -sSL "https://github.com/rust-analyzer/rust-analyzer/releases/download/2020-04-20/rust-analyzer-linux" -o "${HOME}/.cargo/bin/rust-analyzer"
+	chmod +x "${HOME}/.cargo/bin/rust-analyzer"
+
+	# Install clippy
+	rustup component add clippy
 }
 
 # install/update golang from source
@@ -335,7 +352,7 @@ install_golang() {
 	set +e
 	go get golang.org/x/lint/golint
 	go get golang.org/x/tools/cmd/cover
-	go get golang.org/x/tools/cmd/gopls
+	go get golang.org/x/tools/gopls
 	go get golang.org/x/review/git-codereview
 	go get golang.org/x/tools/cmd/goimports
 	go get golang.org/x/tools/cmd/gorename
@@ -478,11 +495,12 @@ install_scripts() {
 
 # install stuff for i3 window manager
 install_wmapps() {
-	apt update || true
-	apt install -y \
+	sudo apt update || true
+	sudo apt install -y \
 		bluez \
 		bluez-firmware \
 		feh \
+		google-chrome-stable \
 		i3 \
 		i3lock \
 		i3status \
@@ -502,19 +520,6 @@ install_wmapps() {
 	systemctl --user enable pulseaudio.service
 	systemctl --user enable pulseaudio.socket
 	systemctl --user start pulseaudio.service
-
-	# update clickpad settings
-	mkdir -p /etc/X11/xorg.conf.d/
-	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/X11/xorg.conf.d/50-synaptics-clickpad.conf > /etc/X11/xorg.conf.d/50-synaptics-clickpad.conf
-
-	# add xorg conf
-	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/X11/xorg.conf > /etc/X11/xorg.conf
-
-	# get correct sound cards on boot
-	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/modprobe.d/intel.conf > /etc/modprobe.d/intel.conf
-
-	# pretty fonts
-	curl -sSL https://raw.githubusercontent.com/jeffl8n/dotfiles/master/etc/fonts/local.conf > /etc/fonts/local.conf
 
 	echo "Fonts file setup successfully now run:"
 	echo "	dpkg-reconfigure fontconfig-config"
@@ -557,6 +562,29 @@ get_dotfiles() {
 }
 
 install_vim() {
+	# Install node, needed for coc.vim
+	curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
+
+	# FROM: https://github.com/nodesource/distributions/blob/master/README.md
+	# Replace with the branch of Node.js or io.js you want to install: node_6.x,
+	# node_8.x, etc...
+	VERSION=node_14.x
+	# The below command will set this correctly, but if lsb_release isn't available, you can set it manually:
+	# - For Debian distributions: jessie, sid, etc...
+	# - For Ubuntu distributions: xenial, bionic, etc...
+	# - For Debian or Ubuntu derived distributions your best option is to use
+	# the codename corresponding to the upstream release your distribution is
+	# based off. This is an advanced scenario and unsupported if your
+	# distribution is not listed as supported per earlier in this README.
+	DISTRO="$(lsb_release -s -c)"
+	echo "deb https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+	echo "deb-src https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+
+	sudo apt update || true
+	sudo apt install -y \
+		nodejs \
+		--no-install-recommends
+
 	# create subshell
 	(
 	cd "$HOME"
@@ -638,8 +666,6 @@ main() {
 
 		install_graphics "$2"
 	elif [[ $cmd == "wm" ]]; then
-		check_is_sudo
-
 		install_wmapps
 	elif [[ $cmd == "dotfiles" ]]; then
 		get_user

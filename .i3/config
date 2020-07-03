@@ -35,6 +35,9 @@ font pango:Monospace 12
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+floating_minimum_size 150 x 150
+floating_maximum_size 2500 x 1500
+
 # start a terminal
 bindsym $mod+Return exec $term
 
@@ -73,6 +76,7 @@ for_window [class="VirtualBox"] floating enable
 for_window [class="vlc"] floating enable
 for_window [class="Wine"] floating enable
 for_window [class="Wireshark"] floating enable
+for_window [class="zoom"] floating enable
 
 # lock screen
 bindsym $mod+l exec $lockcmd -c 111111
@@ -166,15 +170,15 @@ bindsym XF86MonBrightnessDown exec sudo light -U 5 # decrease screen brightness
 
 # Screenshots
 # Screenshot fullscreen
-bindsym Print exec "scrot -q 100 ${HOME}'/Pictures/Screenshots/%Y-%m-%d-%H-%M-%S_$wx$h.png' -e gsutil cp -a public-read $f gs://misc.jeffl8n.com/screenshots/ && echo https://misc.jeffl8n.com/screenshots/$n | xclip -i -selection clipboard'"
+bindsym Print exec "scrot -q 100 ${HOME}'/Pictures/Screenshots/%Y-%m-%d-%H-%M-%S_$wx$h.png' -e ${HOME}'/google-cloud-sdk/bin/gsutil cp -a public-read $f gs://misc.jeffl8n.com/screenshots/ && echo https://misc.jeffl8n.com/screenshots/$n | xclip -i -selection clipboard'"
 # Screenshot fullscreen, sway
 #bindsym Shift+Print exec "swaygrab ${HOME}/Pictures/Screenshots/$(date '+%Y-%m-%d-%H-%M-%S').png"
 # Screenshot with selection
-bindsym $mod+Print exec "sleep 0.4; scrot -q 100 -s ${HOME}'/Pictures/Screenshots/%Y-%m-%d-%H-%M-%S_$wx$h.png' -e gsutil cp -a public-read $f gs://misc.jeffl8n.com/screenshots/ && echo https://misc.jeffl8n.com/screenshots/$n | xclip -i -selection clipboard'"
+bindsym $mod+Print exec "sleep 0.4; scrot -q 100 -s ${HOME}'/Pictures/Screenshots/%Y-%m-%d-%H-%M-%S_$wx$h.png' -e ${HOME}'/google-cloud-sdk/bin/gsutil cp -a public-read $f gs://misc.jeffl8n.com/screenshots/ && echo https://misc.jeffl8n.com/screenshots/$n | xclip -i -selection clipboard'"
 # Screenshot capture, sway
 #bindsym Shift+Print exec "swaygrab -c ${HOME}/Pictures/Screenshots/$(date '+%Y-%m-%d-%H-%M-%S').webm"
 # Screenshot current focused window
-bindsym Shift+Print exec "scrot -q 100 -u ${HOME}'/Pictures/Screenshots/%Y-%m-%d-%H-%M-%S_$wx$h.png' -e gsutil cp -a public-read $f gs://misc.jeffl8n.com/screenshots/ && echo https://misc.jeffl8n.com/screenshots/$n | xclip -i -selection clipboard'"
+bindsym Shift+Print exec "scrot -q 100 -u ${HOME}'/Pictures/Screenshots/%Y-%m-%d-%H-%M-%S_$wx$h.png' -e ${HOME}'/google-cloud-sdk/bin/gsutil cp -a public-read $f gs://misc.jeffl8n.com/screenshots/ && echo https://misc.jeffl8n.com/screenshots/$n | xclip -i -selection clipboard'"
 # Screenshot current focused window, sway
 #bindsym Shift+Print exec "swaygrab --focused ${HOME}/Pictures/Screenshots/$(date '+%Y-%m-%d-%H-%M-%S').png"
 
