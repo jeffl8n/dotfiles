@@ -94,13 +94,6 @@ setup_sources() {
 	deb-src http://ppa.launchpad.net/yubico/stable/ubuntu xenial main
 	EOF
 
-	# tlp: Advanced Linux Power Management
-	cat <<-EOF > /etc/apt/sources.list.d/tlp.list
-	# tlp: Advanced Linux Power Management
-	# http://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html
-	deb http://repo.linrunner.de/debian sid main
-	EOF
-
 	# tailscale
 	curl https://pkgs.tailscale.com/stable/debian/buster.gpg | sudo apt-key add -
 	curl https://pkgs.tailscale.com/stable/debian/buster.list | sudo tee /etc/apt/sources.list.d/tailscale.list
@@ -111,7 +104,7 @@ setup_sources() {
 
 	# Add the Cloud SDK distribution URI as a package source
 	cat <<-EOF > /etc/apt/sources.list.d/google-cloud-sdk.list
-	deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main
+	deb https://packages.cloud.google.com/apt $CLOUD_SDK_REPO main
 	EOF
 
 	# Import the Google Cloud Platform public key
@@ -125,11 +118,16 @@ setup_sources() {
 	# Import the Google Chrome public key
 	curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
 
+	# Add the Brave browser package source
+	cat <<-EOF > /etc/apt/sources.list.d/brave-browser-release.list
+	deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main
+	EOF
+
+	# Import the Brave brower public key
+	curl -s https://brave-browser-apt-release.s3.brave.com/brave-core.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/brave-browser-release.gpg add -
+
 	# add the yubico ppa gpg key
 	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 3653E21064B19D134466702E43D5C49532CBA1A9
-
-	# add the tlp apt-repo gpg key
-	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 6B283E95745A6D903009F7CA641EED65CD4E8809
 }
 
 base_min() {
@@ -499,6 +497,7 @@ install_wmapps() {
 	sudo apt install -y \
 		bluez \
 		bluez-firmware \
+		brave-browser \
 		feh \
 		google-chrome-stable \
 		i3 \
@@ -557,8 +556,6 @@ get_dotfiles() {
 	)
 
 	install_vim;
-
-	install_rvm;
 }
 
 install_vim() {

@@ -89,8 +89,7 @@ URxvt*background:       [90]S_base04
 
 !-- Xft settings -- !
 ! Setting dpi here messes up the xrandr and xorg settings.
-!Xft.dpi:        282
-Xft.dpi:        144
+!Xft.dpi:        131
 Xft.rgba:       rgb
 Xft.autohint:   0
 Xft.lcdfilter:  lcddefault

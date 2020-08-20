@@ -4,25 +4,22 @@
 export GOPATH="${HOME}/.go"
 
 # update path
-export PATH=/usr/local/bin:${PATH}:/sbin
+export PATH=/usr/local/bin:${PATH}:/sbin:/usr/local/sbin
 
 # add go path
 export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
-
-# add npm path
-export PATH="${HOME}/.npm/bin:${PATH}"
-
-### add Heroku Toolbelt path
-export PATH="/usr/local/heroku/bin:$PATH"
-
-# add pip/python path
-export PATH="${HOME}/.local/bin:${PATH}"
 
 # add rust path
 export PATH="${HOME}/.cargo/bin:${PATH}"
 
 # add bcc tools path
 export PATH="/usr/share/bcc/tools:${PATH}"
+
+# add gnubin for mac
+export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:${PATH}"
+
+# add gnu getopt
+export PATH="/usr/local/opt/gnu-getopt/bin:${PATH}"
 
 # update cdpath
 export CDPATH=${CDPATH}:${GOPATH}/src/github.com:${GOPATH}/src/golang.org:${GOPATH}/src

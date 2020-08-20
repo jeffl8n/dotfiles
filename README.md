@@ -1,6 +1,6 @@
 # dotfiles
 
-[![Travis CI](https://img.shields.io/travis/jeffl8n/dotfiles.svg?style=for-the-badge)](https://travis-ci.org/jeffl8n/dotfiles)
+[![make test](https://github.com/jeffl8n/dotfiles/workflows/make%20test/badge.svg)](https://github.com/jeffl8n/dotfiles/actions?query=workflow%3A%22make+test%22+branch%3Amaster)
 
 **Table of Contents**
 
@@ -18,15 +18,16 @@
 
 ## About
 
-Thanks to @jessfraz for these dotfiles!
+Thanks to @jessfraz for the start of these dotfiles
 
 ### Installing
 
 ```console
+$ bin/install.sh base
 $ make
 ```
 
-This will create symlinks from this repo to your home folder.
+This will install the base software and create symlinks from this repo to your home folder.
 
 ### Customizing
 

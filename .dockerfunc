@@ -332,11 +332,15 @@ hollywood(){
 		${DOCKER_REPO_PREFIX}/hollywood
 }
 htop(){
-	docker run --rm -it \
-		--pid host \
-		--net none \
-		--name htop \
-		${DOCKER_REPO_PREFIX}/htop
+	if [[ -n "$(which htop)" ]]; then
+		"$(which htop)" "$@"
+	else
+		docker run --rm -it \
+			--pid host \
+			--net none \
+			--name htop \
+			${DOCKER_REPO_PREFIX}/htop
+	fi
 }
 htpasswd(){
 	docker run --rm -it \
@@ -1241,30 +1245,42 @@ wrk(){
 		${DOCKER_REPO_PREFIX}/wrk "$@"
 }
 ykman(){
-	del_stopped ykpersonalize
+	del_stopped ykman
 
-	docker run --rm -it \
-		-v /etc/localtime:/etc/localtime:ro \
-		--device /dev/bus/usb \
-		--name ykman \
-		${DOCKER_REPO_PREFIX}/ykman bash
+	if [[ -n "$(which ykman)" ]]; then
+		"$(which ykman)" "$@"
+	else
+		docker run --rm -it \
+			-v /etc/localtime:/etc/localtime:ro \
+			--device /dev/bus/usb \
+			--name ykman \
+			${DOCKER_REPO_PREFIX}/ykman bash
+	fi
 }
 ykpersonalize(){
 	del_stopped ykpersonalize
 
-	docker run --rm -it \
-		-v /etc/localtime:/etc/localtime:ro \
-		--device /dev/bus/usb \
-		--name ykpersonalize \
-		${DOCKER_REPO_PREFIX}/ykpersonalize bash
+	if [[ -n "$(which ykpersonalize)" ]]; then
+		"$(which ykpersonalize)" "$@"
+	else
+		docker run --rm -it \
+			-v /etc/localtime:/etc/localtime:ro \
+			--device /dev/bus/usb \
+			--name ykpersonalize \
+			${DOCKER_REPO_PREFIX}/ykpersonalize bash
+	fi
 }
 yubico_piv_tool(){
 	del_stopped yubico-piv-tool
 
-	docker run --rm -it \
-		-v /etc/localtime:/etc/localtime:ro \
-		--device /dev/bus/usb \
-		--name yubico-piv-tool \
-		${DOCKER_REPO_PREFIX}/yubico-piv-tool bash
+	if [[ -n "$(which yubico-piv-tool)" ]]; then
+		"$(which yubico-piv-tool)" "$@"
+	else
+		docker run --rm -it \
+			-v /etc/localtime:/etc/localtime:ro \
+			--device /dev/bus/usb \
+			--name yubico-piv-tool \
+			${DOCKER_REPO_PREFIX}/yubico-piv-tool bash
+	fi
 }
 alias yubico-piv-tool="yubico_piv_tool"
