@@ -98,13 +98,9 @@ setup_sources() {
 	curl https://pkgs.tailscale.com/stable/debian/buster.gpg | sudo apt-key add -
 	curl https://pkgs.tailscale.com/stable/debian/buster.list | sudo tee /etc/apt/sources.list.d/tailscale.list
 
-	# Create an environment variable for the correct distribution
-	CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
-	export CLOUD_SDK_REPO
-
 	# Add the Cloud SDK distribution URI as a package source
 	cat <<-EOF > /etc/apt/sources.list.d/google-cloud-sdk.list
-	deb https://packages.cloud.google.com/apt $CLOUD_SDK_REPO main
+	deb https://packages.cloud.google.com/apt cloud-sdk main
 	EOF
 
 	# Import the Google Cloud Platform public key
