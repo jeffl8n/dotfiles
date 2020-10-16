@@ -211,6 +211,7 @@ base() {
 		scdaemon \
 		systemd \
 		tailscale \
+		openvpn \
 		--no-install-recommends
 
 	setup_sudo
