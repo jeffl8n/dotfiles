@@ -366,14 +366,14 @@ install_golang() {
 	go get github.com/genuinetools/udict
 	go get github.com/genuinetools/weather
 
-	go get github.com/jessfraz/gmailfilters
 	go get github.com/jessfraz/junk/sembump
 	go get github.com/jessfraz/secping
-	go get github.com/jessfraz/ship
 	go get github.com/jessfraz/tdash
 
 	go get github.com/axw/gocov/gocov
 	go get honnef.co/go/tools/cmd/staticcheck
+
+	go get github.com/muesli/duf
 
 	# Tools for vimgo.
 	go get github.com/jstemmer/gotags
