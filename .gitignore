@@ -26,5 +26,7 @@ Session.vim
 .irssi/saved_colors
 .irssi/scripts/autorun/blocker.pl
 .irssi/startup
+.mutt/sourced/aliases
+.mutt/cache
 .rainbow_oauth
 .nginx/conf.d/*

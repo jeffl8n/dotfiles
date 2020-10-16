@@ -205,6 +205,7 @@ base() {
 		libpam-systemd \
 		libpcsclite-dev \
 		libseccomp-dev \
+		mutt \
 		pcscd \
 		pinentry-curses \
 		scdaemon \
