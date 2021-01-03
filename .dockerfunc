@@ -470,9 +470,13 @@ lpass(){
 		${DOCKER_REPO_PREFIX}/lpass "$@"
 }
 lynx(){
-	docker run --rm -it \
-		--name lynx \
-		${DOCKER_REPO_PREFIX}/lynx "$@"
+	if [[ -n "$(which lynx)" ]]; then
+		"$(which lynx)" "$@"
+	else
+		docker run --rm -it \
+			--name lynx \
+			${DOCKER_REPO_PREFIX}/lynx "$@"
+	fi
 }
 masscan(){
 	docker run -it --rm \
@@ -508,36 +512,40 @@ mpd(){
 		--name mpd \
 		${DOCKER_REPO_PREFIX}/mpd
 }
-#mutt(){
-#	# subshell so we dont overwrite variables
-#	(
-#	local account=$1
-#	export IMAP_SERVER
-#	export SMTP_SERVER
-#
-#	if [[ "$account" == "riseup" ]]; then
-#		export GMAIL=$MAIL_RISEUP
-#		export GMAIL_NAME=$MAIL_RISEUP_NAME
-#		export GMAIL_PASS=$MAIL_RISEUP_PASS
-#		export GMAIL_FROM=$MAIL_RISEUP_FROM
-#		IMAP_SERVER=mail.riseup.net
-#		SMTP_SERVER=$IMAP_SERVER
-#	fi
-#
-#	docker run -it --rm \
-#		-e GMAIL \
-#		-e GMAIL_NAME \
-#		-e GMAIL_PASS \
-#		-e GMAIL_FROM \
-#		-e GPG_ID \
-#		-e IMAP_SERVER \
-#		-e SMTP_SERVER \
-#		-v "${HOME}/.gnupg:/home/user/.gnupg:ro" \
-#		-v /etc/localtime:/etc/localtime:ro \
-#		--name "mutt-${account}" \
-#		${DOCKER_REPO_PREFIX}/mutt
-#	)
-#}
+mutt(){
+	if [[ -n "$(which mutt)" ]]; then
+		"$(which mutt)" "$@"
+	else
+		# subshell so we dont overwrite variables
+		(
+		local account=$1
+		export IMAP_SERVER
+		export SMTP_SERVER
+
+		if [[ "$account" == "riseup" ]]; then
+			export GMAIL=$MAIL_RISEUP
+			export GMAIL_NAME=$MAIL_RISEUP_NAME
+			export GMAIL_PASS=$MAIL_RISEUP_PASS
+			export GMAIL_FROM=$MAIL_RISEUP_FROM
+			IMAP_SERVER=mail.riseup.net
+			SMTP_SERVER=$IMAP_SERVER
+		fi
+
+		docker run -it --rm \
+			-e GMAIL \
+			-e GMAIL_NAME \
+			-e GMAIL_PASS \
+			-e GMAIL_FROM \
+			-e GPG_ID \
+			-e IMAP_SERVER \
+			-e SMTP_SERVER \
+			-v "${HOME}/.gnupg:/home/user/.gnupg:ro" \
+			-v /etc/localtime:/etc/localtime:ro \
+			--name "mutt-${account}" \
+			${DOCKER_REPO_PREFIX}/mutt
+		)
+	fi
+}
 ncmpc(){
 	del_stopped ncmpc
 
@@ -1014,15 +1022,19 @@ termboy(){
 		${DOCKER_REPO_PREFIX}/nes "/games/${game}.rom"
 }
 terraform(){
-	docker run -it --rm \
-		-v "${HOME}:${HOME}:ro" \
-		-v "$(pwd):/usr/src/repo" \
-		-v /tmp:/tmp \
-		--workdir /usr/src/repo \
-		--log-driver none \
-		-e GOOGLE_APPLICATION_CREDENTIALS \
-		-e SSH_AUTH_SOCK \
-		${DOCKER_REPO_PREFIX}/terraform "$@"
+	if [[ -n "$(which terraform)" ]]; then
+		"$(which terraform)" "$@"
+	else
+		docker run -it --rm \
+			-v "${HOME}:${HOME}:ro" \
+			-v "$(pwd):/usr/src/repo" \
+			-v /tmp:/tmp \
+			--workdir /usr/src/repo \
+			--log-driver none \
+			-e GOOGLE_APPLICATION_CREDENTIALS \
+			-e SSH_AUTH_SOCK \
+			${DOCKER_REPO_PREFIX}/terraform "$@"
+	fi
 }
 tor(){
 	del_stopped tor

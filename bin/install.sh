@@ -372,15 +372,15 @@ install_golang() {
 
 	go get github.com/axw/gocov/gocov
 	go get honnef.co/go/tools/cmd/staticcheck
-
 	go get github.com/muesli/duf
+	go get github.com/google/gops
 
 	# Tools for vimgo.
 	go get github.com/jstemmer/gotags
 	go get github.com/nsf/gocode
 	go get github.com/rogpeppe/godef
 
-	aliases=( genuinetools/contained.af genuinetools/binctr genuinetools/img docker/docker moby/buildkit opencontainers/runc )
+	aliases=( ) # ( genuinetools/contained.af genuinetools/binctr genuinetools/img docker/docker moby/buildkit opencontainers/runc )
 	for project in "${aliases[@]}"; do
 		owner=$(dirname "$project")
 		repo=$(basename "$project")
@@ -414,14 +414,14 @@ install_golang() {
 	done
 
 	# do special things for k8s GOPATH
-	mkdir -p "${GOPATH}/src/k8s.io"
-	kubes_repos=( community kubernetes release sig-release )
-	for krepo in "${kubes_repos[@]}"; do
-		git clone "https://github.com/kubernetes/${krepo}.git" "${GOPATH}/src/k8s.io/${krepo}"
-		cd "${GOPATH}/src/k8s.io/${krepo}"
-		git remote set-url --push origin no_push
-		git remote add jeffl8n "https://github.com/jeffl8n/${krepo}.git"
-	done
+	# mkdir -p "${GOPATH}/src/k8s.io"
+	# kubes_repos=( community kubernetes release sig-release )
+	#for krepo in "${kubes_repos[@]}"; do
+	#	git clone "https://github.com/kubernetes/${krepo}.git" "${GOPATH}/src/k8s.io/${krepo}"
+	#	cd "${GOPATH}/src/k8s.io/${krepo}"
+	#	git remote set-url --push origin no_push
+	#	git remote add jeffl8n "https://github.com/jeffl8n/${krepo}.git"
+	#done
 	)
 
 	# symlink weather binary for motd
