@@ -119,8 +119,16 @@ setup_sources() {
 	deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main
 	EOF
 
-	# Import the Brave brower public key
+	# Import the Brave browser public key
 	curl -s https://brave-browser-apt-release.s3.brave.com/brave-core.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/brave-browser-release.gpg add -
+
+	# Add the Virtualbox package source
+	cat <<-EOF > /etc/apt/sources.list.d/virtualbox-release.list
+	deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian buster contrib
+	EOF
+
+	# Import the Virtualbox public key
+	curl -s https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/virtualbox-release.gpg add -
 
 	# add the yubico ppa gpg key
 	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 3653E21064B19D134466702E43D5C49532CBA1A9
@@ -212,6 +220,7 @@ base() {
 		systemd \
 		tailscale \
 		openvpn \
+		virtualbox-6.1 \
 		--no-install-recommends
 
 	setup_sudo

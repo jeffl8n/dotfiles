@@ -597,9 +597,13 @@ nginx(){
 	sudo hostess add jeff 127.0.0.1
 }
 nmap(){
-	docker run --rm -it \
-		--net host \
-		${DOCKER_REPO_PREFIX}/nmap "$@"
+	if [[ -n "$(which nmap)" ]]; then
+		"$(which nmap)" "$@"
+	else
+		docker run --rm -it \
+			--net host \
+			${DOCKER_REPO_PREFIX}/nmap "$@"
+	fixx
 }
 notify_osd(){
 	del_stopped notify_osd
@@ -1137,13 +1141,17 @@ virsh(){
 virtualbox(){
 	del_stopped virtualbox
 
-	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
-		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
-		--privileged \
-		--name virtualbox \
-		${DOCKER_REPO_PREFIX}/virtualbox
+	if [[ -n "$(which virtualbox)" ]]; then
+		"$(which virtualbox	)" "$@"
+	else
+		docker run -d \
+			-v /etc/localtime:/etc/localtime:ro \
+			-v /tmp/.X11-unix:/tmp/.X11-unix \
+			-e "DISPLAY=unix${DISPLAY}" \
+			--privileged \
+			--name virtualbox \
+			${DOCKER_REPO_PREFIX}/virtualbox
+	fi
 }
 virt_viewer(){
 	relies_on kvm
