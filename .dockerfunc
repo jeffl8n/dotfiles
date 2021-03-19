@@ -603,7 +603,7 @@ nmap(){
 		docker run --rm -it \
 			--net host \
 			${DOCKER_REPO_PREFIX}/nmap "$@"
-	fixx
+	fi
 }
 notify_osd(){
 	del_stopped notify_osd
