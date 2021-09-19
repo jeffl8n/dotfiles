@@ -374,7 +374,7 @@ install_golang() {
 	local user="$USER"
 	# rebuild stdlib for faster builds
 	sudo chown -R "${user}" "${GO_SRC}/pkg"
-	sudo chown -R "${user}" $GOPATH
+	sudo chown -R "${user}" "$GOPATH"
 	CGO_ENABLED=0 go install -a -installsuffix cgo std
 	)
 

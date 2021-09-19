@@ -163,3 +163,11 @@ for file in ~/.{bash_prompt,aliases,functions,path,dockerfunc,extra,exports}; do
 done
 unset file
 
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
+
+# shellcheck source=/dev/null
+source "$HOME/.cargo/env"
+
+alias start-apue='VBoxManage startvm "apue" --type headless'
