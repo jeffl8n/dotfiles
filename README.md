@@ -63,7 +63,7 @@ export GMAIL_FROM=from-email@you.com
 ### `.vim`
 
 For `.vimrc` and `.vim` dotfiles see
-[github.com/jessfraz/.vim](https://github.com/jessfraz/.vim).
+[github.com/jeffl8n/.vim](https://github.com/jeffl8n/.vim).
 
 ## Contributing
 

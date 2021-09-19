@@ -130,6 +130,32 @@ setup_sources() {
 	# Import the Virtualbox public key
 	curl -s https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/virtualbox-release.gpg add -
 
+	# Add the Microsoft package source
+	cat <<-EOF > /etc/apt/sources.list.d/microsoft-release.list
+	deb [arch=amd64] https://packages.microsoft.com/debian/10/prod buster main
+	EOF
+
+	# Import the Microsoft public key
+	curl -s https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/microsoft-release.gpg add -
+
+	# Add the llvm package source
+	cat <<-EOF > /etc/apt/sources.list.d/llvm-release.list
+	deb http://apt.llvm.org/buster/ llvm-toolchain-buster main
+	deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster main
+	# 9
+	deb http://apt.llvm.org/buster/ llvm-toolchain-buster-9 main
+	deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-9 main
+	# 11
+	deb http://apt.llvm.org/buster/ llvm-toolchain-buster-11 main
+	deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-11 main
+	# 12
+	deb http://apt.llvm.org/buster/ llvm-toolchain-buster-12 main
+	deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-12 main
+	EOF
+
+	# Import the llvm public key
+	curl -s https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key --keyring /etc/apt/trusted.gpg.d/llvm-snapshot.gpg add -
+
 	# add the yubico ppa gpg key
 	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 3653E21064B19D134466702E43D5C49532CBA1A9
 }
@@ -178,7 +204,6 @@ base_min() {
 		tree \
 		tzdata \
 		unzip \
-		vim \
 		xz-utils \
 		zip \
 		--no-install-recommends
@@ -221,6 +246,7 @@ base() {
 		tailscale \
 		openvpn \
 		virtualbox-6.1 \
+		dotnet-sdk-5.0 \
 		--no-install-recommends
 
 	setup_sudo
@@ -347,7 +373,8 @@ install_golang() {
 	curl -sSL "https://storage.googleapis.com/golang/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -xz
 	local user="$USER"
 	# rebuild stdlib for faster builds
-	sudo chown -R "${user}" /usr/local/go/pkg
+	sudo chown -R "${user}" "${GO_SRC}/pkg"
+	sudo chown -R "${user}" $GOPATH
 	CGO_ENABLED=0 go install -a -installsuffix cgo std
 	)
 
@@ -383,6 +410,9 @@ install_golang() {
 	go get honnef.co/go/tools/cmd/staticcheck
 	go get github.com/muesli/duf
 	go get github.com/google/gops
+
+	# Hugo (for blog)
+	go get github.com/gohugoio/hugo
 
 	# Tools for vimgo.
 	go get github.com/jstemmer/gotags
@@ -565,14 +595,13 @@ get_dotfiles() {
 	install_vim;
 }
 
-install_vim() {
-	# Install node, needed for coc.vim
+install_nodejs() {
 	curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
 
 	# FROM: https://github.com/nodesource/distributions/blob/master/README.md
 	# Replace with the branch of Node.js or io.js you want to install: node_6.x,
 	# node_8.x, etc...
-	VERSION=node_14.x
+	VERSION=node_16.x
 	# The below command will set this correctly, but if lsb_release isn't available, you can set it manually:
 	# - For Debian distributions: jessie, sid, etc...
 	# - For Ubuntu distributions: xenial, bionic, etc...
@@ -588,6 +617,18 @@ install_vim() {
 	sudo apt install -y \
 		nodejs \
 		--no-install-recommends
+}
+
+install_vim() {
+	# Install node, needed for coc.vim
+	install_nodejs
+
+	sudo apt update || true
+	sudo apt install -y \
+		vim-nox \
+		python3-dev \
+		mono-complete \
+		--no-install-recommends
 
 	# create subshell
 	(
@@ -595,7 +636,7 @@ install_vim() {
 
 	# install .vim files
 	sudo rm -rf "${HOME}/.vim"
-	git clone --recursive git@github.com:jessfraz/.vim.git "${HOME}/.vim"
+	git clone --recursive git@github.com:jeffl8n/.vim.git "${HOME}/.vim"
 	(
 	cd "${HOME}/.vim"
 	make install
@@ -634,6 +675,7 @@ usage() {
 	echo "  wm                                  	- install window manager/desktop pkgs"
 	echo "  dotfiles                            	- get dotfiles"
 	echo "  vim                                 	- install vim specific dotfiles"
+	echo "  nodejs                              	- install nodejs"
 	echo "  golang                              	- install golang and packages"
 	echo "  rust                                	- install rust"
 	echo "  scripts                             	- install scripts"
@@ -676,6 +718,8 @@ main() {
 		get_dotfiles
 	elif [[ $cmd == "vim" ]]; then
 		install_vim
+	elif [[ $cmd == "nodejs" ]]; then
+		install_nodejs
 	elif [[ $cmd == "rust" ]]; then
 		install_rust
 	elif [[ $cmd == "golang" ]]; then
