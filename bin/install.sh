@@ -246,7 +246,7 @@ base() {
 		tailscale \
 		openvpn \
 		virtualbox-6.1 \
-		dotnet-sdk-5.0 \
+		dotnet-sdk-6.0 \
 		--no-install-recommends
 
 	setup_sudo
