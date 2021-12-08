@@ -364,6 +364,8 @@ install_golang() {
 		sudo rm -rf "$GO_SRC"
 		sudo rm -rf "$GOPATH"
 	fi
+	sudo mkdir "$GO_SRC"
+	mkdir "$GOPATH"
 
 	GO_VERSION=${GO_VERSION#go}
 

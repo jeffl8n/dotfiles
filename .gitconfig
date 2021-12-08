@@ -60,7 +60,7 @@
     mdiff = "!f() { git stash | head -1 | grep -q 'No local changes to save'; x=$?; git merge --no-commit $1 &>/dev/null; git add -u &>/dev/null; git diff --staged; git reset --hard &>/dev/null; test $x -ne 0 && git stash pop &>/dev/null; }; f"
 
     # Pull in remote changes for the current repository and all its submodules
-    p = "!f() { DEFAULT_BRANCH=$(git db); git pull; git submodule foreach git pull origin $DEFAULT_BRANCH;} f"
+    p = "!f() { DEFAULT_BRANCH=$(git db); git pull; git submodule foreach git pull origin $DEFAULT_BRANCH;}; f"
 
     # Checkout a pull request from origin (of a github repository)
     pr = "!pr() { git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; }; pr"
