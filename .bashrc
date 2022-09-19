@@ -168,5 +168,3 @@ if [[ -f "${HOME}/.travis/travis.sh" ]]; then
 	# shellcheck source=/dev/null
 	source "${HOME}/.travis/travis.sh"
 fi
-
-. "$HOME/.cargo/env"
