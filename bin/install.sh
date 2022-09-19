@@ -47,56 +47,33 @@ setup_sources_min() {
 		lsb-release \
 		--no-install-recommends
 
-	# hack for latest git (don't judge)
-	cat <<-EOF > /etc/apt/sources.list.d/git-core.list
-	deb http://ppa.launchpad.net/git-core/ppa/ubuntu xenial main
-	deb-src http://ppa.launchpad.net/git-core/ppa/ubuntu xenial main
-	EOF
-
-	# iovisor/bcc-tools
-	cat <<-EOF > /etc/apt/sources.list.d/iovisor.list
-	deb https://repo.iovisor.org/apt/xenial xenial main
-	EOF
-
-	# add the git-core ppa gpg key
-	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys E1DD270288B4E6030699E45FA1715D88E1DF1F24
-
-	# add the iovisor/bcc-tools gpg key
-	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 648A4A16A23015EEF4A66B8E4052245BD4284CDD
-
 	# turn off translations, speed up apt update
 	mkdir -p /etc/apt/apt.conf.d
 	echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/99translations
 }
 
 # sets up apt sources
-# assumes you are going to use debian buster
+# assumes you are going to use debian bullseye
 setup_sources() {
 	setup_sources_min;
 
 	cat <<-EOF > /etc/apt/sources.list
-	deb http://httpredir.debian.org/debian buster main contrib non-free
-	deb-src http://httpredir.debian.org/debian/ buster main contrib non-free
+	deb http://httpredir.debian.org/debian bullseye main contrib non-free
+	deb-src http://httpredir.debian.org/debian/ bullseye main contrib non-free
 
-	deb http://httpredir.debian.org/debian/ buster-updates main contrib non-free
-	deb-src http://httpredir.debian.org/debian/ buster-updates main contrib non-free
+	deb http://httpredir.debian.org/debian/ bullseye-updates main contrib non-free
+	deb-src http://httpredir.debian.org/debian/ bullseye-updates main contrib non-free
 
-	deb http://security.debian.org/ buster/updates main contrib non-free
-	deb-src http://security.debian.org/ buster/updates main contrib non-free
+	deb https://deb.debian.org/debian-security bullseye-security main contrib 
+	deb-src https://deb.debian.org/debian-security bullseye-security main contrib
 
 	deb http://httpredir.debian.org/debian experimental main contrib non-free
 	deb-src http://httpredir.debian.org/debian experimental main contrib non-free
 	EOF
 
-	# yubico
-	cat <<-EOF > /etc/apt/sources.list.d/yubico.list
-	deb http://ppa.launchpad.net/yubico/stable/ubuntu xenial main
-	deb-src http://ppa.launchpad.net/yubico/stable/ubuntu xenial main
-	EOF
-
 	# tailscale
-	curl https://pkgs.tailscale.com/stable/debian/buster.gpg | sudo apt-key add -
-	curl https://pkgs.tailscale.com/stable/debian/buster.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+	curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/tailscale_bullseye.gpg > /dev/null
+	curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.list | sudo tee /etc/apt/sources.list.d/tailscale.list > /dev/null
 
 	# Add the Cloud SDK distribution URI as a package source
 	cat <<-EOF > /etc/apt/sources.list.d/google-cloud-sdk.list
@@ -104,7 +81,7 @@ setup_sources() {
 	EOF
 
 	# Import the Google Cloud Platform public key
-	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+	curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/google_cloud_platform.gpg > /dev/null
 
 	# Add the Google Chrome distribution URI as a package source
 	cat <<-EOF > /etc/apt/sources.list.d/google-chrome.list
@@ -112,7 +89,7 @@ setup_sources() {
 	EOF
 
 	# Import the Google Chrome public key
-	curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+	curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/google_chrome.gpg > /dev/null
 
 	# Add the Brave browser package source
 	cat <<-EOF > /etc/apt/sources.list.d/brave-browser-release.list
@@ -120,44 +97,38 @@ setup_sources() {
 	EOF
 
 	# Import the Brave browser public key
-	curl -s https://brave-browser-apt-release.s3.brave.com/brave-core.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/brave-browser-release.gpg add -
+	curl -fsSL https://brave-browser-apt-release.s3.brave.com/brave-core.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/brave.gpg > /dev/null
 
 	# Add the Virtualbox package source
 	cat <<-EOF > /etc/apt/sources.list.d/virtualbox-release.list
-	deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian buster contrib
+	deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian bullseye contrib
 	EOF
 
 	# Import the Virtualbox public key
-	curl -s https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/virtualbox-release.gpg add -
+	curl -fsSL https://www.virtualbox.org/download/oracle_vbox_2016.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/virtualbox.gpg > /dev/null
 
 	# Add the Microsoft package source
 	cat <<-EOF > /etc/apt/sources.list.d/microsoft-release.list
-	deb [arch=amd64] https://packages.microsoft.com/debian/10/prod buster main
+	deb [arch=amd64] https://packages.microsoft.com/debian/11/prod bullseye main
 	EOF
 
 	# Import the Microsoft public key
-	curl -s https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/microsoft-release.gpg add -
+	curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft-release.gpg > /dev/null
 
 	# Add the llvm package source
 	cat <<-EOF > /etc/apt/sources.list.d/llvm-release.list
-	deb http://apt.llvm.org/buster/ llvm-toolchain-buster main
-	deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster main
-	# 9
-	deb http://apt.llvm.org/buster/ llvm-toolchain-buster-9 main
-	deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-9 main
-	# 11
-	deb http://apt.llvm.org/buster/ llvm-toolchain-buster-11 main
-	deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-11 main
-	# 12
-	deb http://apt.llvm.org/buster/ llvm-toolchain-buster-12 main
-	deb-src http://apt.llvm.org/buster/ llvm-toolchain-buster-12 main
+	deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main
+	deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main
+	# 14 
+	deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-14 main
+	deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-14 main
+	# 15 
+	deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-15 main
+	deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-15 main
 	EOF
 
 	# Import the llvm public key
-	curl -s https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key --keyring /etc/apt/trusted.gpg.d/llvm-snapshot.gpg add -
-
-	# add the yubico ppa gpg key
-	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 3653E21064B19D134466702E43D5C49532CBA1A9
+	curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/llvm.gpg > /dev/null
 }
 
 base_min() {
@@ -312,7 +283,7 @@ setup_sudo() {
 	sudo gpasswd -a "$TARGET_USER" docker
 
 	# add go path to secure path if it doesn't already exist
-	LINE="Defaults	secure_path=\"/usr/local/go/bin:/home/${TARGET_USER}/.go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/share/bcc/tools:/home/${TARGET_USER}/.cargo/bin\""
+	LINE="Defaults	secure_path=\"/usr/local/go/bin:/home/${TARGET_USER}/.go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/${TARGET_USER}/.cargo/bin\""
 	FILE="/etc/sudoers"
 	grep -qPx -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
 	LINE="Defaults	env_keep += \"ftp_proxy http_proxy https_proxy no_proxy GOPATH EDITOR\""
@@ -341,7 +312,7 @@ install_rust() {
 	# Install rust-src for rust analyzer
 	rustup component add rust-src
 	# Install rust-analyzer
-	curl -sSL "https://github.com/rust-analyzer/rust-analyzer/releases/download/2020-04-20/rust-analyzer-linux" -o "${HOME}/.cargo/bin/rust-analyzer"
+	curl -sfSL "https://github.com/rust-analyzer/rust-analyzer/releases/download/2020-04-20/rust-analyzer-linux" -o "${HOME}/.cargo/bin/rust-analyzer"
 	chmod +x "${HOME}/.cargo/bin/rust-analyzer"
 
 	# Install clippy
@@ -351,8 +322,13 @@ install_rust() {
 # install/update golang from source
 install_golang() {
 	export GO_VERSION
-	GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
+	GO_VERSION=$(curl -fSL "https://golang.org/VERSION?m=text")
 	export GO_SRC=/usr/local/go
+
+	if [[ -z ${GOPATH} ]]; then
+		export GOPATH="${HOME}/.go"
+		export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+	fi
 
 	# if we are passing the version
 	if [[ -n "$1" ]]; then
@@ -372,7 +348,7 @@ install_golang() {
 	# subshell
 	(
 	kernel=$(uname -s | tr '[:upper:]' '[:lower:]')
-	curl -sSL "https://storage.googleapis.com/golang/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -xz
+	curl -sfSL "https://storage.googleapis.com/golang/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -xz
 	local user="$USER"
 	# rebuild stdlib for faster builds
 	sudo chown -R "${user}" "${GO_SRC}/pkg"
@@ -508,26 +484,18 @@ install_graphics() {
 # install custom scripts/binaries
 install_scripts() {
 	# install speedtest
-	curl -sSL https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py  > /usr/local/bin/speedtest
+	curl -sfSL https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py > /usr/local/bin/speedtest
 	chmod +x /usr/local/bin/speedtest
 
 	# install icdiff
-	curl -sSL https://raw.githubusercontent.com/jeffkaufman/icdiff/master/icdiff > /usr/local/bin/icdiff
-	curl -sSL https://raw.githubusercontent.com/jeffkaufman/icdiff/master/git-icdiff > /usr/local/bin/git-icdiff
+	curl -sfSL https://raw.githubusercontent.com/jeffkaufman/icdiff/master/icdiff > /usr/local/bin/icdiff
+	curl -sfSL https://raw.githubusercontent.com/jeffkaufman/icdiff/master/git-icdiff > /usr/local/bin/git-icdiff
 	chmod +x /usr/local/bin/icdiff
 	chmod +x /usr/local/bin/git-icdiff
 
 	# install lolcat
-	curl -sSL https://raw.githubusercontent.com/tehmaze/lolcat/master/lolcat > /usr/local/bin/lolcat
+	curl -sfSL https://raw.githubusercontent.com/tehmaze/lolcat/master/lolcat > /usr/local/bin/lolcat
 	chmod +x /usr/local/bin/lolcat
-
-
-	local scripts=( have light )
-
-	for script in "${scripts[@]}"; do
-		curl -sSL "https://misc.j3ss.co/binaries/$script" > "/usr/local/bin/${script}"
-		chmod +x "/usr/local/bin/${script}"
-	done
 }
 
 # install stuff for i3 window manager
@@ -598,7 +566,7 @@ get_dotfiles() {
 }
 
 install_nodejs() {
-	curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
+	curl -sfSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/nodesource.gpg > /dev/null
 
 	# FROM: https://github.com/nodesource/distributions/blob/master/README.md
 	# Replace with the branch of Node.js or io.js you want to install: node_6.x,
