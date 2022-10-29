@@ -30,7 +30,7 @@ update_firmware(){
 
 	# copy the firmware
 	cd linux-firmware
-	mkdir -p /lib/firmware/{intel,i915,qca,ath10k,amdgpu,rtl_nic}
+	mkdir -p /lib/firmware/{intel,i915,qca,ath10k,amdgpu,rtl_nic,iwlwifi}
 	cp intel/*.sfi /lib/firmware/intel/
 	cp intel/*.ddc /lib/firmware/intel/
 	cp i915/*.bin /lib/firmware/i915/
@@ -38,6 +38,12 @@ update_firmware(){
 	cp -r ath10k/* /lib/firmware/ath10k/
 	cp amdgpu/*.bin /lib/firmware/amdgpu/
 	cp -r rtl_nic/* /lib/firmware/rtl_nic/
+	# iwlwifi
+	cp iwlwifi-2030*.ucode /lib/firmware/iwlwifi/
+	cp iwlwifi-7265*.ucode /lib/firmware/iwlwifi/
+	cp iwlwifi-800*.ucode /lib/firmware/iwlwifi/
+	cp iwlwifi-8265*.ucode /lib/firmware/iwlwifi/
+	cp iwlwifi-Qu-c0*.ucode /lib/firmware/iwlwifi/
 
 	# cleanup
 	rm -rf "$tdir"

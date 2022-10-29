@@ -163,11 +163,6 @@ update_firmware() {
 	echo "Updating firmware..."
 	echo
 	update-firmware
-
-	echo
-	echo "Updating iwlwifi..."
-	echo
-	update-iwlwifi
 }
 
 update() {
