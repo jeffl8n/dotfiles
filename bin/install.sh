@@ -360,44 +360,36 @@ install_golang() {
 	(
 	set -x
 	set +e
-	go get golang.org/x/lint/golint
-	go get golang.org/x/tools/cmd/cover
-	go get golang.org/x/tools/gopls
-	go get golang.org/x/review/git-codereview
-	go get golang.org/x/tools/cmd/goimports
-	go get golang.org/x/tools/cmd/gorename
-	go get golang.org/x/tools/cmd/guru
+	go install golang.org/x/lint/golint@latest
+	go install golang.org/x/tools/cmd/cover@latest
+	go install golang.org/x/tools/gopls@latest
+	go install golang.org/x/review/git-codereview@latest
+	go install golang.org/x/tools/cmd/goimports@latest
+	go install golang.org/x/tools/cmd/gorename@latest
+	go install golang.org/x/tools/cmd/guru@latest
 
-	go get github.com/genuinetools/amicontained
-	go get github.com/genuinetools/apk-file
-	go get github.com/genuinetools/audit
-	go get github.com/genuinetools/bpfd
-	go get github.com/genuinetools/bpfps
-	go get github.com/genuinetools/certok
-	go get github.com/genuinetools/netns
-	go get github.com/genuinetools/pepper
-	go get github.com/genuinetools/reg
-	go get github.com/genuinetools/udict
-	go get github.com/genuinetools/weather
+	go install github.com/genuinetools/apk-file@latest
+	go install github.com/genuinetools/certok@latest
+	go install github.com/genuinetools/pepper@latest
+	go install github.com/genuinetools/udict@latest
 
-	go get github.com/jessfraz/junk/sembump
-	go get github.com/jessfraz/secping
-	go get github.com/jessfraz/tdash
-
-	go get github.com/axw/gocov/gocov
-	go get honnef.co/go/tools/cmd/staticcheck
-	go get github.com/muesli/duf
-	go get github.com/google/gops
+	go install github.com/axw/gocov/gocov@latest
+	go install honnef.co/go/tools/cmd/staticcheck@latest
+	go install github.com/muesli/duf@latest
+	go install github.com/google/gops@latest
 
 	# Hugo (for blog)
-	go get github.com/gohugoio/hugo
+	go install github.com/gohugoio/hugo@latest
 
 	# Tools for vimgo.
-	go get github.com/jstemmer/gotags
-	go get github.com/nsf/gocode
-	go get github.com/rogpeppe/godef
+	go install github.com/jstemmer/gotags@latest
+	go install github.com/nsf/gocode@latest
+	go install github.com/rogpeppe/godef@latest
 
-	aliases=( ) # ( genuinetools/contained.af genuinetools/binctr genuinetools/img docker/docker moby/buildkit opencontainers/runc )
+	# scc
+	go install github.com/boyter/scc/v3@latest
+
+	aliases=( ) # ( docker/docker moby/buildkit opencontainers/runc ) # array of targets to get with code
 	for project in "${aliases[@]}"; do
 		owner=$(dirname "$project")
 		repo=$(basename "$project")
@@ -440,9 +432,6 @@ install_golang() {
 	#	git remote add jeffl8n "https://github.com/jeffl8n/${krepo}.git"
 	#done
 	)
-
-	# symlink weather binary for motd
-	sudo ln -snf "${GOPATH}/bin/weather" /usr/local/bin/weather
 }
 
 # install graphics drivers
