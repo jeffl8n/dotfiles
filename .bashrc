@@ -168,3 +168,9 @@ if [[ -f "${HOME}/.travis/travis.sh" ]]; then
 	# shellcheck source=/dev/null
 	source "${HOME}/.travis/travis.sh"
 fi
+
+# source 1password plugins
+if [[ -f "${HOME}/.config/op/plugins.sh" ]]; then
+	# shellcheck source=/dev/null
+	source "${HOME}/.config/op/plugins.sh"
+fi

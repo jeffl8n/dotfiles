@@ -71,6 +71,24 @@ setup_sources() {
 	deb-src http://httpredir.debian.org/debian experimental main contrib non-free
 	EOF
 
+	# 1Password
+	curl -fsSL https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/1password-archive-keyring.gpg > /dev/null
+	
+	cat <<-EOF > /etc/apt/sources.list.d/1password.list
+	deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main	
+	EOF
+
+	sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/ 
+	curl -fsSL https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol > /dev/null
+	sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
+	curl -fsSL https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor | sudo tee /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg  > /dev/null
+
+	# github cli
+	curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg > /dev/null
+	cat <<-EOF > /etc/apt/sources.list.d/github-cli.list
+	deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main
+	EOF
+
 	# tailscale
 	curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/tailscale_bullseye.gpg > /dev/null
 	curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.list | sudo tee /etc/apt/sources.list.d/tailscale.list > /dev/null
@@ -136,6 +154,7 @@ base_min() {
 	apt -y upgrade
 
 	apt install -y \
+		1password-cli \
 		adduser \
 		automake \
 		bash-completion \
@@ -148,6 +167,7 @@ base_min() {
 		file \
 		findutils \
 		gcc \
+		gh \
 		git \
 		gnupg \
 		gnupg2 \
