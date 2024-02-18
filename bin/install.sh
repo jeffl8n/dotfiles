@@ -368,7 +368,6 @@ install_golang() {
 	# subshell
 	(
 	kernel=$(uname -s | tr '[:upper:]' '[:lower:]')
-	echo "https://go.dev/dl/go${GO_VERSION}.${kernel}-amd64.tar.gz"
 	curl -sfSL "https://go.dev/dl/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -xz
 	local user="$USER"
 	# rebuild stdlib for faster builds
