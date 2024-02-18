@@ -64,7 +64,7 @@ setup_sources() {
 	deb http://httpredir.debian.org/debian/ bullseye-updates main contrib non-free
 	deb-src http://httpredir.debian.org/debian/ bullseye-updates main contrib non-free
 
-	deb https://deb.debian.org/debian-security bullseye-security main contrib 
+	deb https://deb.debian.org/debian-security bullseye-security main contrib
 	deb-src https://deb.debian.org/debian-security bullseye-security main contrib
 
 	deb http://httpredir.debian.org/debian experimental main contrib non-free
@@ -73,12 +73,12 @@ setup_sources() {
 
 	# 1Password
 	curl -fsSL https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/1password-archive-keyring.gpg > /dev/null
-	
+
 	cat <<-EOF > /etc/apt/sources.list.d/1password.list
-	deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main	
+	deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main
 	EOF
 
-	sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/ 
+	sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
 	curl -fsSL https://downloads.1password.com/linux/debian/debsig/1password.pol | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol > /dev/null
 	sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
 	curl -fsSL https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor | sudo tee /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg  > /dev/null
@@ -137,10 +137,10 @@ setup_sources() {
 	cat <<-EOF > /etc/apt/sources.list.d/llvm-release.list
 	deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main
 	deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main
-	# 14 
+	# 14
 	deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-14 main
 	deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-14 main
-	# 15 
+	# 15
 	deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-15 main
 	deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-15 main
 	EOF
@@ -342,7 +342,7 @@ install_rust() {
 # install/update golang from source
 install_golang() {
 	export GO_VERSION
-	GO_VERSION=$(curl -fSL "https://golang.org/VERSION?m=text")
+	GO_VERSION=$(curl -fSL "https://golang.org/VERSION?m=text" | head -n1)
 	export GO_SRC=/usr/local/go
 
 	if [[ -z ${GOPATH} ]]; then
@@ -368,7 +368,8 @@ install_golang() {
 	# subshell
 	(
 	kernel=$(uname -s | tr '[:upper:]' '[:lower:]')
-	curl -sfSL "https://storage.googleapis.com/golang/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -xz
+	echo "https://go.dev/dl/go${GO_VERSION}.${kernel}-amd64.tar.gz"
+	curl -sfSL "https://go.dev/dl/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -xz
 	local user="$USER"
 	# rebuild stdlib for faster builds
 	sudo chown -R "${user}" "${GO_SRC}/pkg"
