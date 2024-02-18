@@ -571,6 +571,7 @@ get_dotfiles() {
 	mkdir -p ~/Pictures/Screenshots
 	)
 
+	install_neovim;
 	install_vim;
 }
 
@@ -598,6 +599,13 @@ install_nodejs() {
 		--no-install-recommends
 }
 
+install_neovim() {
+	sudo apt update || true
+	sudo apt-install -y \
+		neovim \
+		--no-install-recommends
+}
+
 install_vim() {
 	# Install node, needed for coc.vim
 	install_nodejs
@@ -615,7 +623,7 @@ install_vim() {
 
 	# install .vim files
 	sudo rm -rf "${HOME}/.vim"
-	git clone --recursive git@github.com:jeffl8n/.vim.git "${HOME}/.vim"
+	git clone --recursive git@github.com:jessfraz/.vim.git "${HOME}/.vim"
 	(
 	cd "${HOME}/.vim"
 	make install
@@ -697,6 +705,8 @@ main() {
 		get_dotfiles
 	elif [[ $cmd == "vim" ]]; then
 		install_vim
+	elif [[ $cmd == "neovim" ]]; then
+		install_neovim
 	elif [[ $cmd == "nodejs" ]]; then
 		install_nodejs
 	elif [[ $cmd == "rust" ]]; then
