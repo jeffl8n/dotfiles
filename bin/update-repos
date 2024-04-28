@@ -15,12 +15,6 @@ for dir in "${dirs[@]}"; do
 	git pull
 
 	case "$base" in
-		".vim")
-			echo
-			echo "Running 'make update' in .vim repo..."
-			make update
-			git status
-			;;
 		"dotfiles")
 			echo
 			echo "Running 'make' in dotfiles repo..."

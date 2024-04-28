@@ -53,22 +53,22 @@ setup_sources_min() {
 }
 
 # sets up apt sources
-# assumes you are going to use debian bullseye
+# assumes you are going to use debian bookworm
 setup_sources() {
 	setup_sources_min;
 
 	cat <<-EOF > /etc/apt/sources.list
-	deb http://httpredir.debian.org/debian bullseye main contrib non-free
-	deb-src http://httpredir.debian.org/debian/ bullseye main contrib non-free
+	deb http://httpredir.debian.org/debian bookworm main contrib non-free non-free-firmware
+	deb-src http://httpredir.debian.org/debian/ bookworm main contrib non-free non-free-firmware
 
-	deb http://httpredir.debian.org/debian/ bullseye-updates main contrib non-free
-	deb-src http://httpredir.debian.org/debian/ bullseye-updates main contrib non-free
+	deb http://httpredir.debian.org/debian/ bookworm-updates main contrib non-free non-free-firmware
+	deb-src http://httpredir.debian.org/debian/ bookworm-updates main contrib non-free non-free-firmware
 
-	deb https://deb.debian.org/debian-security bullseye-security main contrib
-	deb-src https://deb.debian.org/debian-security bullseye-security main contrib
+	deb https://deb.debian.org/debian-security bookworm-security main contrib
+	deb-src https://deb.debian.org/debian-security bookworm-security main contrib
 
-	deb http://httpredir.debian.org/debian experimental main contrib non-free
-	deb-src http://httpredir.debian.org/debian experimental main contrib non-free
+	deb http://httpredir.debian.org/debian experimental main contrib non-free non-free-firmware
+	deb-src http://httpredir.debian.org/debian experimental main contrib non-free non-free-firmware
 	EOF
 
 	# 1Password
@@ -90,8 +90,8 @@ setup_sources() {
 	EOF
 
 	# tailscale
-	curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/tailscale_bullseye.gpg > /dev/null
-	curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.list | sudo tee /etc/apt/sources.list.d/tailscale.list > /dev/null
+	curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/tailscale_bookworm.gpg > /dev/null
+	curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.list | sudo tee /etc/apt/sources.list.d/tailscale.list > /dev/null
 
 	# Add the Cloud SDK distribution URI as a package source
 	cat <<-EOF > /etc/apt/sources.list.d/google-cloud-sdk.list
@@ -119,7 +119,7 @@ setup_sources() {
 
 	# Add the Virtualbox package source
 	cat <<-EOF > /etc/apt/sources.list.d/virtualbox-release.list
-	deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian bullseye contrib
+	deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian bookworm contrib
 	EOF
 
 	# Import the Virtualbox public key
@@ -127,7 +127,7 @@ setup_sources() {
 
 	# Add the Microsoft package source
 	cat <<-EOF > /etc/apt/sources.list.d/microsoft-release.list
-	deb [arch=amd64] https://packages.microsoft.com/debian/11/prod bullseye main
+	deb [arch=amd64] https://packages.microsoft.com/debian/12/prod bookworm main
 	EOF
 
 	# Import the Microsoft public key
@@ -135,14 +135,11 @@ setup_sources() {
 
 	# Add the llvm package source
 	cat <<-EOF > /etc/apt/sources.list.d/llvm-release.list
-	deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main
-	deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main
-	# 14
-	deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-14 main
-	deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-14 main
+	deb http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm main
+	deb-src http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm main
 	# 15
-	deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-15 main
-	deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-15 main
+	deb http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm-15 main
+	deb-src http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm-15 main
 	EOF
 
 	# Import the llvm public key
@@ -237,7 +234,7 @@ base() {
 		tailscale \
 		openvpn \
 		virtualbox-6.1 \
-		dotnet-sdk-6.0 \
+		dotnet-sdk-8.0 \
 		--no-install-recommends
 
 	setup_sudo
@@ -381,17 +378,9 @@ install_golang() {
 	set -x
 	set +e
 	go install golang.org/x/lint/golint@latest
-	go install golang.org/x/tools/cmd/cover@latest
 	go install golang.org/x/tools/gopls@latest
-	go install golang.org/x/review/git-codereview@latest
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install golang.org/x/tools/cmd/gorename@latest
-	go install golang.org/x/tools/cmd/guru@latest
-
-	go install github.com/genuinetools/apk-file@latest
-	go install github.com/genuinetools/certok@latest
-	go install github.com/genuinetools/pepper@latest
-	go install github.com/genuinetools/udict@latest
 
 	go install github.com/axw/gocov/gocov@latest
 	go install honnef.co/go/tools/cmd/staticcheck@latest
@@ -401,56 +390,8 @@ install_golang() {
 	# Hugo (for blog)
 	go install github.com/gohugoio/hugo@latest
 
-	# Tools for vimgo.
-	go install github.com/jstemmer/gotags@latest
-	go install github.com/nsf/gocode@latest
-	go install github.com/rogpeppe/godef@latest
-
 	# scc
 	go install github.com/boyter/scc/v3@latest
-
-	aliases=( ) # ( docker/docker moby/buildkit opencontainers/runc ) # array of targets to get with code
-	for project in "${aliases[@]}"; do
-		owner=$(dirname "$project")
-		repo=$(basename "$project")
-		if [[ -d "${HOME}/${repo}" ]]; then
-			rm -rf "${HOME:?}/${repo}"
-		fi
-
-		mkdir -p "${GOPATH}/src/github.com/${owner}"
-
-		if [[ ! -d "${GOPATH}/src/github.com/${project}" ]]; then
-			(
-			# clone the repo
-			cd "${GOPATH}/src/github.com/${owner}"
-			git clone "https://github.com/${project}.git"
-			# fix the remote path, since our gitconfig will make it git@
-			cd "${GOPATH}/src/github.com/${project}"
-			git remote set-url origin "https://github.com/${project}.git"
-			)
-		else
-			echo "found ${project} already in gopath"
-		fi
-
-		# make sure we create the right git remotes
-		if [[ "$owner" != "jeffl8n" ]]; then
-			(
-			cd "${GOPATH}/src/github.com/${project}"
-			git remote set-url --push origin no_push
-			git remote add jeffl8n "https://github.com/jeffl8n/${repo}.git"
-			)
-		fi
-	done
-
-	# do special things for k8s GOPATH
-	# mkdir -p "${GOPATH}/src/k8s.io"
-	# kubes_repos=( community kubernetes release sig-release )
-	#for krepo in "${kubes_repos[@]}"; do
-	#	git clone "https://github.com/kubernetes/${krepo}.git" "${GOPATH}/src/k8s.io/${krepo}"
-	#	cd "${GOPATH}/src/k8s.io/${krepo}"
-	#	git remote set-url --push origin no_push
-	#	git remote add jeffl8n "https://github.com/jeffl8n/${krepo}.git"
-	#done
 	)
 }
 
@@ -501,10 +442,6 @@ install_scripts() {
 	curl -sfSL https://raw.githubusercontent.com/jeffkaufman/icdiff/master/git-icdiff > /usr/local/bin/git-icdiff
 	chmod +x /usr/local/bin/icdiff
 	chmod +x /usr/local/bin/git-icdiff
-
-	# install lolcat
-	curl -sfSL https://raw.githubusercontent.com/tehmaze/lolcat/master/lolcat > /usr/local/bin/lolcat
-	chmod +x /usr/local/bin/lolcat
 }
 
 # install stuff for i3 window manager
@@ -576,23 +513,26 @@ get_dotfiles() {
 }
 
 install_nodejs() {
-	curl -sfSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/nodesource.gpg > /dev/null
+    sudo rm -f /usr/share/keyrings/nodesource.gpg
+    sudo rm -f /etc/apt/sources.list.d/nodesource.list
 
-	# FROM: https://github.com/nodesource/distributions/blob/master/README.md
-	# Replace with the branch of Node.js or io.js you want to install: node_6.x,
-	# node_8.x, etc...
-	VERSION=node_16.x
-	# The below command will set this correctly, but if lsb_release isn't available, you can set it manually:
-	# - For Debian distributions: jessie, sid, etc...
-	# - For Ubuntu distributions: xenial, bionic, etc...
-	# - For Debian or Ubuntu derived distributions your best option is to use
-	# the codename corresponding to the upstream release your distribution is
-	# based off. This is an advanced scenario and unsupported if your
-	# distribution is not listed as supported per earlier in this README.
-	DISTRO="$(lsb_release -s -c)"
-	echo "deb https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
-	echo "deb-src https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+	curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/nodesource.gpg
 
+	# Modified from: https://github.com/nodesource/distributions/blob/master/README.md
+	VERSION=22.x
+	
+	echo "deb [arch=amd64 signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$VERSION nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list > /dev/null
+
+	# N|solid Config
+    echo "Package: nsolid" | sudo tee /etc/apt/preferences.d/nsolid > /dev/null
+    echo "Pin: origin deb.nodesource.com" | sudo tee -a /etc/apt/preferences.d/nsolid > /dev/null
+    echo "Pin-Priority: 600" | sudo tee -a /etc/apt/preferences.d/nsolid > /dev/null
+
+    # Nodejs Config
+    echo "Package: nodejs" | sudo tee /etc/apt/preferences.d/nodejs > /dev/null
+    echo "Pin: origin deb.nodesource.com" | sudo tee -a /etc/apt/preferences.d/nodejs > /dev/null
+    echo "Pin-Priority: 600" | sudo tee -a /etc/apt/preferences.d/nodejs > /dev/null
+	
 	sudo apt update || true
 	sudo apt install -y \
 		nodejs \
@@ -600,10 +540,15 @@ install_nodejs() {
 }
 
 install_neovim() {
-	sudo apt update || true
-	sudo apt-install -y \
-		neovim \
-		--no-install-recommends
+	(
+		sudo rm -rf /opt/nvim
+		curl -sfSL https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz | sudo tar -v -C /opt -xz
+
+		sudo update-alternatives --install /usr/bin/vi vi "$(command -v nvim)" 60
+		sudo update-alternatives --config vi
+		sudo update-alternatives --install /usr/bin/editor editor "$(command -v nvim)" 60
+		sudo update-alternatives --config editor
+	)
 }
 
 install_vim() {
@@ -616,25 +561,6 @@ install_vim() {
 		python3-dev \
 		mono-complete \
 		--no-install-recommends
-
-	# create subshell
-	(
-	cd "$HOME"
-
-	# install .vim files
-	sudo rm -rf "${HOME}/.vim"
-	git clone --recursive git@github.com:jessfraz/.vim.git "${HOME}/.vim"
-	(
-	cd "${HOME}/.vim"
-	make install
-	)
-
-	# update alternatives to vim
-	sudo update-alternatives --install /usr/bin/vi vi "$(command -v vim)" 60
-	sudo update-alternatives --config vi
-	sudo update-alternatives --install /usr/bin/editor editor "$(command -v vim)" 60
-	sudo update-alternatives --config editor
-	)
 }
 
 install_tools() {
@@ -661,6 +587,7 @@ usage() {
 	echo "  graphics {intel, amd, geforce, optimus}  - install graphics drivers"
 	echo "  wm                                  	- install window manager/desktop pkgs"
 	echo "  dotfiles                            	- get dotfiles"
+	echo "  neovim                                 	- install vim specific dotfiles"
 	echo "  vim                                 	- install vim specific dotfiles"
 	echo "  nodejs                              	- install nodejs"
 	echo "  golang                              	- install golang and packages"

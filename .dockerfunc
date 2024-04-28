@@ -16,6 +16,9 @@ dcleanup(){
 	local images
 	mapfile -t images < <(docker images --filter dangling=true -q 2>/dev/null)
 	docker rmi "${images[@]}" 2>/dev/null
+	mapfile -t images < <(docker images -q 2>/dev/null)
+	docker rmi "${images[@]}" 2>/dev/null
+	docker system prune -f
 }
 del_stopped(){
 	local name=$1
@@ -79,9 +82,13 @@ nginx_config(){
 # Container Aliases
 #
 apt_file(){
-	docker run --rm -it \
-		--name apt-file \
-		${DOCKER_REPO_PREFIX}/apt-file
+	if [[ -n "$(which apt-file)" ]]; then
+		"$(which apt-file)" "$@"
+	else
+		docker run --rm -it \
+			--name apt-file \
+			${DOCKER_REPO_PREFIX}/apt-file
+	fi
 }
 alias apt-file="apt_file"
 audacity(){
@@ -98,11 +105,15 @@ audacity(){
 		${DOCKER_REPO_PREFIX}/audacity
 }
 aws(){
-	docker run -it --rm \
-		-v "${HOME}/.aws:/root/.aws" \
-		--log-driver none \
-		--name aws \
-		${DOCKER_REPO_PREFIX}/awscli "$@"
+	if [[ -n "$(which aws)" ]]; then
+		"$(which aws)" "$@"
+	else
+		docker run -it --rm \
+			-v "${HOME}/.aws:/root/.aws" \
+			--log-driver none \
+			--name aws \
+			${DOCKER_REPO_PREFIX}/awscli "$@"
+	fi
 }
 az(){
 	docker run -it --rm \
@@ -1103,9 +1114,13 @@ torproxy(){
 	hostess add torproxy "$(docker inspect --format '{{.NetworkSettings.Networks.bridge.IPAddress}}' torproxy)"
 }
 traceroute(){
-	docker run --rm -it \
-		--net host \
-		${DOCKER_REPO_PREFIX}/traceroute "$@"
+	if [[ -n "$(which traceroute)" ]]; then
+		"$(which traceroute)" "$@"
+	else
+		docker run --rm -it \
+			--net host \
+			${DOCKER_REPO_PREFIX}/traceroute "$@"
+	fi
 }
 transmission(){
 	del_stopped transmission
