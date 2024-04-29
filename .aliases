@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check for various OS openers. Quit as soon as we find one that works.
-for opener in browser-exec xdg-open cmd.exe cygstart "start" open; do
+for opener in xdg-open cmd.exe cygstart "start" open; do
 	if command -v $opener >/dev/null 2>&1; then
 		if [[ "$opener" == "cmd.exe" ]]; then
 			# shellcheck disable=SC2139
@@ -38,14 +38,12 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
 # Shortcuts
 alias dl="cd ~/Downloads"
 alias g="git"
 alias h="history"
-alias gc=". /usr/local/bin/gitdate && git commit -v "
 
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`
@@ -98,12 +96,6 @@ alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\\: .*|GE
 # Canonical hex dump; some systems have this symlinked
 command -v hd > /dev/null || alias hd="hexdump -C"
 
-# OS X has no `md5sum`, so use `md5` as a fallback
-command -v md5sum > /dev/null || alias md5sum="md5"
-
-# OS X has no `sha1sum`, so use `shasum` as a fallback
-command -v sha1sum > /dev/null || alias sha1sum="shasum"
-
 # Trim new lines and copy to clipboard
 alias c="tr -d '\\n' | xclip -selection clipboard"
 
@@ -121,13 +113,6 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 	alias "$method"="lwp-request -m \"$method\""
 done
 
-# Kill all the tabs in Chrome to free up memory
-# [C] explained: http://www.commandlinefu.com/commands/view/402/exclude-grep-from-your-grepped-output-of-ps-alias-included-in-description
-alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
-
-# Lock the screen (when going AFK)
-alias afk="i3lock -c 000000"
-
 # vhosts
 alias hosts='sudo vim /etc/hosts'
 
@@ -142,12 +127,6 @@ alias mv='mv -i'
 
 # untar
 alias untar='tar xvf'
-
-# Pipe my public key to my clipboard.
-alias pubkey="more ~/.ssh/id_ed25519.pub | xclip -selection clipboard | echo '=> Public key copied to pasteboard.'"
-
-# Pipe my private key to my clipboard.
-alias prikey="more ~/.ssh/id_ed25519 | xclip -selection clipboard | echo '=> Private key copied to pasteboard.'"
 
 # Use nvim instead of vim
 alias vim="nvim"

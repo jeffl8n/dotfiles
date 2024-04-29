@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# add neovim path
+export PATH="$PATH:/opt/nvim-linux64/bin"
+
 # go path
 export GOPATH="${HOME}/.go"
 
@@ -12,24 +15,11 @@ export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
 # add rust path
 export PATH="${HOME}/.cargo/bin:${PATH}"
 
-# add gnubin for mac
-export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:${PATH}"
-
 # add gnu getopt
 export PATH="/usr/local/opt/gnu-getopt/bin:${PATH}"
 
 # update cdpath
 export CDPATH=${CDPATH}:${GOPATH}/src/github.com:${GOPATH}/src/golang.org:${GOPATH}/src
-
-# The next line updates PATH for the Google Cloud SDK.
-# shellcheck source=/dev/null
-if [ -f "${HOME}/.google-cloud-sdk/path.bash.inc" ]; then . "${HOME}/.google-cloud-sdk/path.bash.inc"; fi
-
-# The next line enables shell command completion for gcloud.
-# shellcheck source=/dev/null
-if [ -f "${HOME}/.google-cloud-sdk/completion.bash.inc" ]; then . "${HOME}/.google-cloud-sdk/completion.bash.inc"; fi
-
-export PATH="${HOME}/.google-cloud-sdk/bin:${PATH}"
 
 # update path for gnu coreutils, make & find on darwin
 export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}

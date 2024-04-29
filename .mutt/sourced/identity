@@ -18,9 +18,6 @@ set my_mask=$mask
 
 ### Options
 set beep_new
-# set query_command="goobook -c ~/.mutt/sourced/goobookrc query"
-# macro index,pager A "<pipe-message>goobook  -c ~/.mutt/sourced/goobookrc add<return>" "add the sender address to Google contacts"
-
 
 ### IMAP
 unset imap_passive

@@ -93,14 +93,6 @@ setup_sources() {
 	curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/tailscale_bookworm.gpg > /dev/null
 	curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.list | sudo tee /etc/apt/sources.list.d/tailscale.list > /dev/null
 
-	# Add the Cloud SDK distribution URI as a package source
-	cat <<-EOF > /etc/apt/sources.list.d/google-cloud-sdk.list
-	deb https://packages.cloud.google.com/apt cloud-sdk main
-	EOF
-
-	# Import the Google Cloud Platform public key
-	curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/google_cloud_platform.gpg > /dev/null
-
 	# Add the Google Chrome distribution URI as a package source
 	cat <<-EOF > /etc/apt/sources.list.d/google-chrome.list
 	deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
@@ -218,7 +210,6 @@ base() {
 		fwupd \
 		fwupdate \
 		gnupg-agent \
-		google-cloud-sdk \
 		iwd \
 		libapparmor-dev \
 		libimobiledevice6 \
@@ -501,11 +492,6 @@ get_dotfiles() {
 
 	# enable dbus for the user session
 	# systemctl --user enable dbus.socket
-
-	sudo systemctl enable "i3lock@${TARGET_USER}"
-
-	cd "$HOME"
-	mkdir -p ~/Pictures/Screenshots
 	)
 
 	install_neovim;

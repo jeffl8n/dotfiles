@@ -102,7 +102,7 @@ if [[ -d /etc/bash_completion.d/ ]]; then
 fi
 
 # We do this before the following so that all the paths work.
-for file in ~/.{bash_prompt,aliases,functions,path,dockerfunc,extra,exports}; do
+for file in ~/.{bash_prompt,aliases,functions,path,extra,exports}; do
 	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
 		# shellcheck source=/dev/null
 		source "$file"
@@ -168,12 +168,6 @@ if hash rustup 2>/dev/null; then
 	eval "$(rustup completions bash)"
 fi
 
-# source travis bash completion
-if [[ -f "${HOME}/.travis/travis.sh" ]]; then
-	# shellcheck source=/dev/null
-	source "${HOME}/.travis/travis.sh"
-fi
-
 # source 1password plugins
 if [[ -f "${HOME}/.config/op/plugins.sh" ]]; then
 	# shellcheck source=/dev/null
@@ -185,5 +179,3 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 # shellcheck source=/dev/null
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-export PATH="$PATH:/opt/nvim-linux64/bin"
