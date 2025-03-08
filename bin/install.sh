@@ -93,14 +93,6 @@ setup_sources() {
 	curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/tailscale_bookworm.gpg > /dev/null
 	curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.list | sudo tee /etc/apt/sources.list.d/tailscale.list > /dev/null
 
-	# Add the Google Chrome distribution URI as a package source
-	cat <<-EOF > /etc/apt/sources.list.d/google-chrome.list
-	deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
-	EOF
-
-	# Import the Google Chrome public key
-	curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/google_chrome.gpg > /dev/null
-
 	# Add the Brave browser package source
 	cat <<-EOF > /etc/apt/sources.list.d/brave-browser-release.list
 	deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main
@@ -443,7 +435,6 @@ install_wmapps() {
 		bluez-firmware \
 		brave-browser \
 		feh \
-		google-chrome-stable \
 		i3 \
 		i3lock \
 		i3status \

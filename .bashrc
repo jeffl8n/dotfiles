@@ -94,18 +94,33 @@ if ! shopt -oq posix; then
 		. /usr/local/etc/bash_completion
 	fi
 fi
+
 if [[ -d /etc/bash_completion.d/ ]]; then
 	for file in /etc/bash_completion.d/* ; do
-		# shellcheck source=/dev/null
-		source "$file"
+		if [[ -n $BASHRC_BENCH ]]; then
+			TIMEFORMAT="$file: %R"
+			# shellcheck source=/dev/null
+			time source "$file"
+			unset TIMEFORMAT
+		else
+			# shellcheck source=/dev/null
+			source "$file"
+		fi
 	done
 fi
 
 # We do this before the following so that all the paths work.
-for file in ~/.{bash_prompt,aliases,functions,path,extra,exports}; do
+for file in ~/.{aliases,functions,path,extra,exports,bash_prompt}; do
 	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
-		# shellcheck source=/dev/null
-		source "$file"
+		if [[ -n $BASHRC_BENCH ]]; then
+			TIMEFORMAT="$file: %R"
+			# shellcheck source=/dev/null
+			time source "$file"
+			unset TIMEFORMAT
+		else
+			# shellcheck source=/dev/null
+			source "$file"
+		fi
 	fi
 done
 unset file
@@ -179,3 +194,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 # shellcheck source=/dev/null
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
+
