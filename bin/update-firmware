@@ -39,11 +39,11 @@ update_firmware(){
 	cp amdgpu/*.bin /lib/firmware/amdgpu/
 	cp -r rtl_nic/* /lib/firmware/rtl_nic/
 	# iwlwifi
-	cp iwlwifi-2030*.ucode /lib/firmware/iwlwifi/
-	cp iwlwifi-7265*.ucode /lib/firmware/iwlwifi/
-	cp iwlwifi-800*.ucode /lib/firmware/iwlwifi/
-	cp iwlwifi-8265*.ucode /lib/firmware/iwlwifi/
-	cp iwlwifi-Qu-c0*.ucode /lib/firmware/iwlwifi/
+	cp intel/iwlwifi/iwlwifi-2030*.ucode /lib/firmware/iwlwifi/
+	cp intel/iwlwifi/iwlwifi-7265*.ucode /lib/firmware/iwlwifi/
+	cp intel/iwlwifi/iwlwifi-800*.ucode /lib/firmware/iwlwifi/
+	cp intel/iwlwifi/iwlwifi-8265*.ucode /lib/firmware/iwlwifi/
+	cp intel/iwlwifi/iwlwifi-Qu-c0*.ucode /lib/firmware/iwlwifi/
 
 	# cleanup
 	rm -rf "$tdir"
