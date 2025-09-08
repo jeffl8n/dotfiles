@@ -1,9 +1,0 @@
-# Tianon keybindings and settings, because he's special.
-bind pager <up> previous-line
-bind pager <down> next-line
-set resolve = no # uh, don't randomly take me to other messages when I do things
-
-bind editor <Tab> complete-query
-bind editor ^T complete
-bind editor <space> noop
-    

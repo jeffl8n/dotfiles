@@ -1,9 +1,0 @@
-# -*- muttrc -*-
-#
-# List of folders that are considered to be "mailboxes" (folders that
-# receive incoming mail).
-#
-
-# gmail
-set folder="imaps://imap.gmail.com"
-mailboxes "=INBOX"

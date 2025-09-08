@@ -1,9 +1,0 @@
-# -*- muttrc -*-
-#
-# Send (and message) hooks
-#
-
-## From and Signature ##
-# The default account is now chosen by a folder-hook, see there for more information.
-send-hook	.*				'set signature="~/.signature"'
-

@@ -100,14 +100,7 @@ setup_sources() {
 
 	# Import the Brave browser public key
 	curl -fsSL https://brave-browser-apt-release.s3.brave.com/brave-core.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/brave.gpg > /dev/null
-
-	# Add the Virtualbox package source
-	cat <<-EOF > /etc/apt/sources.list.d/virtualbox-release.list
-	deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian bookworm contrib
 	EOF
-
-	# Import the Virtualbox public key
-	curl -fsSL https://www.virtualbox.org/download/oracle_vbox_2016.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/virtualbox.gpg > /dev/null
 
 	# Add the Microsoft package source
 	cat <<-EOF > /etc/apt/sources.list.d/microsoft-release.list
@@ -209,14 +202,11 @@ base() {
 		libpam-systemd \
 		libpcsclite-dev \
 		libseccomp-dev \
-		mutt \
 		pcscd \
 		pinentry-curses \
 		scdaemon \
 		systemd \
 		tailscale \
-		openvpn \
-		virtualbox-6.1 \
 		dotnet-sdk-8.0 \
 		--no-install-recommends
 
